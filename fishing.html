@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICUR™ - Dept. of Unnecessary Aquaculture</title>
+<!-- Base64 SVG Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMGEwYTBhIi8+PHBhdGggZD0iTTEwLDMyIFEzMCwxMCA1MCwzMiBRMzAsNTQgMTAsMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M4ZmYwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHBvbHlnb24gcG9pbnRzPSIxMCwzMiA1LDIwIDUsNDQiIGZpbGw9IiNjOGZmMDAiLz48L3N2Zz4=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lime: #c8ff00;
+    --black: #0a0a0a;
+    --offwhite: #f0ece3;
+    --coral: #ff4d3a;
+    --blue: #0033ff;
+    --cream: #fdf8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--offwhite);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--lime); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  #cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid var(--lime); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: difference;
+  }
+  body:hover #cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9997; opacity: 0.4;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--coral); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(14px, 2vw, 18px); letter-spacing: 0.05em;
+    overflow: hidden; white-space: nowrap;
+    border-bottom: 1px solid var(--coral);
+    padding: 10px 0;
+  }
+  .marquee-inner { display: inline-block; animation: marquee 20s linear infinite; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .icon-svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+
+  /* NAV */
+  nav {
+    padding: 20px clamp(24px, 6vw, 80px);
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(240,236,227,0.1);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.05em; color: var(--offwhite); text-decoration: none; cursor: none; }
+  .nav-logo span { color: var(--lime); }
+  
+  /* MAIN LAYOUT */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    flex-grow: 1;
+  }
+  @media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
+
+  /* FISHING ZONE (Left) */
+  #fishing-zone {
+    padding: clamp(40px, 8vw, 80px);
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid rgba(240,236,227,0.1);
+    position: relative;
+    background: radial-gradient(circle at center, rgba(0, 51, 255, 0.1) 0%, transparent 70%);
+  }
+  .status-label { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--coral); margin-bottom: 24px; }
+  .pond-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 8vw, 100px); line-height: 0.9; margin-bottom: 24px; }
+  
+  /* ANIMATED WATER DISPLAY */
+  #water-display {
+    background: var(--black);
+    border: 1px solid rgba(240,236,227,0.2);
+    height: 320px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #fishing-scene { width: 100%; height: 100%; position: absolute; inset: 0; }
+  
+  .scene-group { display: none; }
+  svg[data-state="IDLE"] #state-idle { display: inline; }
+  svg[data-state="WAITING"] #state-waiting { display: inline; }
+  svg[data-state="BITING"] #state-biting { display: inline; }
+  svg[data-state="CATCH"] #state-catch { display: inline; }
+
+  /* FISHING ANIMATIONS */
+  .anim-bob { animation: bobbing 3s ease-in-out infinite; }
+  @keyframes bobbing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  
+  .anim-splash { animation: splashing 0.2s infinite alternate; }
+  @keyframes splashing { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(8px) scale(1.2); } }
+  
+  .anim-catch-fish { animation: flyUp 1.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; transform-origin: center; }
+  @keyframes flyUp { 
+    0% { transform: translate(40px, 100px) rotate(45deg) scale(0); opacity: 1;} 
+    80% { transform: translate(-30px, -60px) rotate(-20deg) scale(1.5); opacity: 1;}
+    100% { transform: translate(-40px, -80px) rotate(-30deg) scale(1.5); opacity: 0;}
+  }
+
+  .anim-water { animation: waveDrift 6s ease-in-out infinite alternate; }
+  @keyframes waveDrift { 0% { transform: translateX(-10px); } 100% { transform: translateX(10px); } }
+
+  .biting-bg { animation: biteFlash 0.2s infinite alternate; }
+  @keyframes biteFlash { 0% { background-color: rgba(255, 77, 58, 0.1); } 100% { background-color: rgba(255, 77, 58, 0.4); } }
+
+  #water-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 20px; font-style: italic; font-weight: 300;
+    text-align: center;
+    z-index: 2;
+    padding: 20px;
+    background: linear-gradient(to top, var(--black), transparent);
+    width: 100%;
+  }
+
+  .action-btn {
+    background: var(--lime); color: var(--black); border: 2px solid var(--lime);
+    font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 20px 40px; cursor: none; transition: all 0.2s;
+    width: fit-content; font-weight: bold;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .action-btn:hover { background: transparent; color: var(--lime); transform: translate(4px, -4px); }
+  .action-btn:disabled { background: #333; border-color: #333; color: #666; pointer-events: none; transform: none; }
+
+  /* MANAGEMENT ZONE (Right) */
+  #management-zone { display: flex; flex-direction: column; }
+
+  /* FUNDS BANNER - NEW PLACEMENT */
+  #funds-banner {
+    background: var(--lime); color: var(--black);
+    padding: clamp(30px, 4vw, 50px);
+    border-bottom: 2px solid var(--black);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .funds-label { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: bold; opacity: 0.7; margin-bottom: 8px; }
+  .funds-amount { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 8vw, 90px); line-height: 0.8; }
+  .funds-icon { width: clamp(60px, 8vw, 100px); height: clamp(60px, 8vw, 100px); opacity: 0.2; }
+
+  /* LOG */
+  .log-panel { padding: 40px; border-bottom: 1px solid rgba(240,236,227,0.1); height: 260px; display: flex; flex-direction: column; }
+  .log-title { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--lime); margin-bottom: 20px; }
+  #log-entries {
+    flex-grow: 1; overflow-y: auto; font-size: 12px; line-height: 1.6; opacity: 0.7; display: flex; flex-direction: column; gap: 12px;
+  }
+  .log-entry { display: flex; gap: 12px; border-left: 2px solid var(--coral); padding-left: 12px; align-items: flex-start;}
+  .log-rare { color: var(--lime); font-weight: bold; border-left-color: var(--lime) !important; }
+
+  /* UPGRADES */
+  .upgrades-panel { background: rgba(240,236,227,0.02); flex-grow: 1; padding: 40px; }
+  .research-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .research-card {
+    background: var(--black); border: 1px solid rgba(240,236,227,0.1);
+    padding: 24px; position: relative; cursor: none; transition: background 0.3s;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+  }
+  .research-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+  }
+  .research-card:hover::before { transform: scaleX(1); }
+  .research-card:hover { background: #111; }
+  
+  .card-info h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.05em; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .card-info p { font-size: 11px; opacity: 0.5; max-width: 250px; }
+  
+  .upgrade-btn {
+    background: transparent; border: 1px solid var(--offwhite); color: var(--offwhite);
+    font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+    padding: 10px 16px; cursor: none; transition: all 0.2s; white-space: nowrap;
+  }
+  .upgrade-btn:hover { background: var(--offwhite); color: var(--black); }
+  .upgrade-btn:disabled { opacity: 0.2; pointer-events: none; }
+
+  /* CUSTOM SCROLLBAR FOR LOG */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--lime); }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+  <a href="#" class="nav-logo">ICUR<span>™</span></a>
+</nav>
+
+<div class="marquee-wrap">
+  <span class="marquee-inner">
+    INITIATING AQUATIC ANOMALY EXTRACTION - WARNING: DO NOT EAT THE SPECIMENS - STAFF MEMO: WHO PUT A STAPLER IN THE POND? - NEW HYPOTHESIS: FISH ARE JUST WET BIRDS - INITIATING AQUATIC ANOMALY EXTRACTION - WARNING: DO NOT EAT THE SPECIMENS - STAFF MEMO: WHO PUT A STAPLER IN THE POND? - NEW HYPOTHESIS: FISH ARE JUST WET BIRDS - 
+  </span>
+</div>
+
+<main>
+  <!-- FISHING ZONE -->
+  <section id="fishing-zone">
+    <p class="status-label" id="status-label">Extraction Status: Awaiting Input</p>
+    <h1 class="pond-title">Sector 7<br><span style="color:var(--coral)">Testing Pond</span></h1>
+    
+    <div id="water-display">
+      <svg id="fishing-scene" data-state="IDLE" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+        <!-- Water Base -->
+        <g class="anim-water">
+          <path d="M-50,220 Q 50,200 150,220 T 350,220 T 550,220 L 550,300 L -50,300 Z" fill="rgba(0, 51, 255, 0.15)"/>
+          <path d="M-50,220 Q 50,200 150,220 T 350,220 T 550,220" fill="none" stroke="var(--blue)" stroke-width="2"/>
+          <path d="M-50,230 Q 100,210 200,230 T 400,230 T 550,230" fill="none" stroke="var(--blue)" stroke-width="1" opacity="0.5"/>
+        </g>
+
+        <!-- STATE: IDLE -->
+        <g id="state-idle" class="scene-group">
+          <path d="M -20,320 L 100,60" stroke="var(--offwhite)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <circle cx="100" cy="60" r="4" fill="var(--offwhite)"/>
+        </g>
+
+        <!-- STATE: WAITING -->
+        <g id="state-waiting" class="scene-group">
+          <path d="M -20,320 Q 100,100 240,60" stroke="var(--offwhite)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <line x1="240" y1="60" x2="240" y2="230" stroke="rgba(240,236,227,0.5)" stroke-width="1"/>
+          <!-- Bobber -->
+          <g class="anim-bob">
+            <line x1="240" y1="220" x2="240" y2="235" stroke="var(--offwhite)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="240" cy="230" r="7" fill="var(--coral)"/>
+            <ellipse cx="240" cy="235" rx="20" ry="4" fill="none" stroke="var(--offwhite)" stroke-width="1" opacity="0.3"/>
+          </g>
+        </g>
+
+        <!-- STATE: BITING -->
+        <g id="state-biting" class="scene-group">
+          <path d="M -20,320 Q 150,240 260,180" stroke="var(--offwhite)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <line x1="260" y1="180" x2="230" y2="245" stroke="var(--offwhite)" stroke-width="2"/>
+          <!-- Splashing Bobber -->
+          <g class="anim-splash">
+            <line x1="230" y1="235" x2="230" y2="250" stroke="var(--offwhite)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="230" cy="245" r="7" fill="var(--coral)"/>
+            <path d="M 210,240 Q 230,200 250,240" stroke="var(--offwhite)" stroke-width="2" fill="none"/>
+            <path d="M 200,245 Q 230,220 260,245" stroke="var(--lime)" stroke-width="2" fill="none"/>
+          </g>
+        </g>
+
+        <!-- STATE: CATCH -->
+        <g id="state-catch" class="scene-group">
+          <path d="M -20,320 Q 50,60 140,20" stroke="var(--offwhite)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <line x1="140" y1="20" x2="160" y2="100" stroke="var(--offwhite)" stroke-width="2"/>
+          <!-- Fish popping out -->
+          <g class="anim-catch-fish">
+            <path d="M 160,100 C 180,70 210,90 220,100 C 210,110 180,130 160,100 Z" fill="var(--lime)"/>
+            <polygon points="215,95 235,90 225,110" fill="var(--lime)"/>
+            <circle cx="175" cy="95" r="3" fill="var(--black)"/>
+            <!-- Splash trail -->
+            <circle cx="160" cy="110" r="2" fill="var(--offwhite)"/>
+            <circle cx="170" cy="125" r="3" fill="var(--offwhite)"/>
+          </g>
+          <!-- Base splash -->
+          <path d="M 140,220 Q 160,180 180,220" stroke="var(--offwhite)" stroke-width="2" fill="none"/>
+        </g>
+      </svg>
+      <div id="water-text">Observation phase active.</div>
+    </div>
+
+    <button class="action-btn" id="action-btn" onclick="handleAction()">
+      <svg class="icon-svg" viewBox="0 0 24 24" id="btn-icon">
+        <path d="M5 19L19 5M19 5v10M19 5H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span id="btn-text">Cast Line</span>
+    </button>
+  </section>
+
+  <!-- MANAGEMENT ZONE -->
+  <section id="management-zone">
+    
+    <!-- BIG FUNDS BANNER -->
+    <div id="funds-banner">
+      <div>
+        <div class="funds-label">Approved Research Grants</div>
+        <div class="funds-amount">$<span id="grant-total">0</span></div>
+      </div>
+      <svg class="funds-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="6" width="20" height="12" rx="2"/>
+        <circle cx="12" cy="12" r="2"/>
+        <path d="M6 12h.01M18 12h.01"/>
+      </svg>
+    </div>
+
+    <div class="log-panel">
+      <div class="log-title">Observation Log</div>
+      <div id="log-entries">
+        <div class="log-entry">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 12v4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <div>System initialized. Ready to extract completely unnecessary data.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="upgrades-panel">
+      <div class="log-title" style="color:var(--blue);">Lab Equipment Upgrades</div>
+      <div class="research-grid">
+        
+        <div class="research-card">
+          <div class="card-info">
+            <h3>
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+              Carbon-Fiber Protocol (Lvl <span id="rod-lvl">1</span>)
+            </h3>
+            <p>Increases reaction window. Current window is highly stressful.</p>
+          </div>
+          <button class="upgrade-btn" id="upg-rod" onclick="upgradeRod()">Cost: $<span id="cost-rod">15</span></button>
+        </div>
+
+        <div class="research-card">
+          <div class="card-info">
+            <h3>
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/>
+              </svg>
+              Existential Bait (Lvl <span id="bait-lvl">1</span>)
+            </h3>
+            <p>Attracts rarer anomalies. Redefines the meaning of "worm".</p>
+          </div>
+          <button class="upgrade-btn" id="upg-bait" onclick="upgradeBait()">Cost: $<span id="cost-bait">25</span></button>
+        </div>
+
+        <div class="research-card">
+          <div class="card-info">
+            <h3>
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>
+              </svg>
+              Caffeinated Reels (Lvl <span id="speed-lvl">1</span>)
+            </h3>
+            <p>Reduces waiting time. Time is money, and we have neither.</p>
+          </div>
+          <button class="upgrade-btn" id="upg-speed" onclick="upgradeSpeed()">Cost: $<span id="cost-speed">40</span></button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// Custom Cursor Logic
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+setInterval(()=>{ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; }, 16);
+document.querySelectorAll('a, button, .research-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cursor.style.width='20px';cursor.style.height='20px'; ring.style.width='60px';ring.style.height='60px'; });
+  el.addEventListener('mouseleave',()=>{ cursor.style.width='12px';cursor.style.height='12px'; ring.style.width='40px';ring.style.height='40px'; });
+});
+
+// SVG Definitions for JS usage
+const svgArrow = `<path d="M5 19L19 5M19 5v10M19 5H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+const svgLightning = `<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>`;
+const svgCancel = `<path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`;
+const svgInfo = `<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 12v4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`;
+const svgStar = `<polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>`;
+
+// Game State
+let grants = 0;
+let gameState = 'IDLE'; // IDLE, WAITING, BITING, CATCH
+let timeoutId = null;
+let biteTimeoutId = null;
+
+// Stats & Levels
+let rodLevel = 1;
+let baitLevel = 1;
+let speedLevel = 1;
+
+// Costs
+let rodCost = 15;
+let baitCost = 25;
+let speedCost = 40;
+
+// Fish Database
+const anomalies = [
+  { name: "Literal Red Herring", minBait: 1, val: 5, rare: false, desc: "It distracts you from actual research." },
+  { name: "Waterproof Stapler", minBait: 1, val: 2, rare: false, desc: "Property of Greg in Accounting." },
+  { name: "Slightly Damp Boot", minBait: 1, val: 1, rare: false, desc: "A classic. Emits low-level radiation." },
+  { name: "Schrodinger's Catfish", minBait: 2, val: 20, rare: true, desc: "It is both caught and uncaught." },
+  { name: "Sentient Algae", minBait: 2, val: 15, rare: false, desc: "It keeps demanding dental coverage." },
+  { name: "Caffeinated Trout", minBait: 3, val: 40, rare: true, desc: "Vibrating at approximately 400Hz." },
+  { name: "The Missing Data", minBait: 4, val: 100, rare: true, desc: "So THAT'S where the 1998 files went." },
+  { name: "Quantum Bass", minBait: 5, val: 250, rare: true, desc: "Exists in three dimensions simultaneously." },
+  { name: "Abyssal Leviathan", minBait: 6, val: 1000, rare: true, desc: "Requires a mathematically theoretical amount of tartar sauce." }
+];
+
+// DOM Elements
+const uiGrants = document.getElementById('grant-total');
+const btnAction = document.getElementById('action-btn');
+const btnIcon = document.getElementById('btn-icon');
+const btnText = document.getElementById('btn-text');
+const txtWater = document.getElementById('water-text');
+const lblStatus = document.getElementById('status-label');
+const displayWater = document.getElementById('water-display');
+const fishingScene = document.getElementById('fishing-scene');
+const logEntries = document.getElementById('log-entries');
+
+function updateUI() {
+  uiGrants.innerText = grants;
+  
+  document.getElementById('rod-lvl').innerText = rodLevel;
+  document.getElementById('cost-rod').innerText = rodCost;
+  document.getElementById('upg-rod').disabled = grants < rodCost;
+
+  document.getElementById('bait-lvl').innerText = baitLevel;
+  document.getElementById('cost-bait').innerText = baitCost;
+  document.getElementById('upg-bait').disabled = grants < baitCost;
+
+  document.getElementById('speed-lvl').innerText = speedLevel;
+  document.getElementById('cost-speed').innerText = speedCost;
+  document.getElementById('upg-speed').disabled = grants < speedCost;
+}
+
+function addLog(msg, isRare = false) {
+  const div = document.createElement('div');
+  div.className = 'log-entry' + (isRare ? ' log-rare' : '');
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+  
+  div.innerHTML = `
+    <svg class="icon-svg" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+      ${isRare ? svgStar : svgInfo}
+    </svg>
+    <div><span style="opacity:0.5; font-size:10px;">[${time}]</span><br>${msg}</div>
+  `;
+  
+  logEntries.appendChild(div);
+  logEntries.scrollTop = logEntries.scrollHeight;
+}
+
+function setActionBtn(text, svgPath, styleClass) {
+  btnText.innerText = text;
+  btnIcon.innerHTML = svgPath;
+}
+
+function handleAction() {
+  if (gameState === 'IDLE') {
+    startFishing();
+  } else if (gameState === 'BITING') {
+    catchFish();
+  } else if (gameState === 'WAITING') {
+    cancelFishing();
+  }
+}
+
+function startFishing() {
+  gameState = 'WAITING';
+  fishingScene.setAttribute('data-state', 'WAITING');
+  setActionBtn("Cancel", svgCancel);
+  
+  lblStatus.innerText = "Status: Calculating Probabilities...";
+  lblStatus.style.color = "var(--offwhite)";
+  txtWater.innerText = "Observing ripples...";
+  
+  // Calculate wait time
+  const baseWait = Math.random() * 4000 + 3000;
+  const speedReduction = (speedLevel - 1) * 500;
+  const waitTime = Math.max(1000, baseWait - speedReduction);
+
+  timeoutId = setTimeout(triggerBite, waitTime);
+}
+
+function triggerBite() {
+  gameState = 'BITING';
+  fishingScene.setAttribute('data-state', 'BITING');
+  displayWater.classList.add('biting-bg');
+  
+  setActionBtn("REEL IN NOW!", svgLightning);
+  lblStatus.innerText = "Status: ANOMALY DETECTED!";
+  lblStatus.style.color = "var(--coral)";
+  txtWater.innerHTML = "<span style='color:var(--coral); font-weight:bold; font-size:32px;'>ANOMALY ENGAGED</span>";
+
+  // Calculate bite window
+  const windowTime = 800 + ((rodLevel - 1) * 200);
+  
+  biteTimeoutId = setTimeout(() => {
+    if (gameState === 'BITING') missFish();
+  }, windowTime);
+}
+
+function catchFish() {
+  clearTimeout(biteTimeoutId);
+  displayWater.classList.remove('biting-bg');
+  
+  gameState = 'CATCH';
+  fishingScene.setAttribute('data-state', 'CATCH');
+  btnAction.disabled = true;
+  setActionBtn("Extracting...", svgInfo);
+  
+  // Determine caught fish
+  const possibleFish = anomalies.filter(f => f.minBait <= baitLevel);
+  let caught;
+  const rand = Math.random();
+  if (rand > 0.7 && possibleFish.some(f=>f.rare)) {
+    const rares = possibleFish.filter(f => f.rare);
+    caught = rares[Math.floor(Math.random() * rares.length)];
+  } else {
+    const commons = possibleFish.filter(f => !f.rare);
+    caught = commons[Math.floor(Math.random() * commons.length)];
+  }
+
+  // Add grants
+  const payout = caught.val + Math.floor(Math.random() * (caught.val * 0.5));
+  grants += payout;
+  
+  txtWater.innerText = `Subject acquired: ${caught.name}`;
+  
+  addLog(`Successfully extracted <strong>${caught.name}</strong>. Grant awarded: $${payout}. <br><span style="font-size:10px; opacity:0.6;">Note: ${caught.desc}</span>`, caught.rare);
+  
+  updateUI();
+
+  // Reset to idle after animation
+  setTimeout(() => {
+    resetToIdle(`Extracted: ${caught.name}`);
+  }, 1500);
+}
+
+function missFish() {
+  displayWater.classList.remove('biting-bg');
+  addLog("Subject escaped. The data is lost forever. Or at least until tomorrow.");
+  resetToIdle("Subject lost. Line snapped.");
+}
+
+function cancelFishing() {
+  clearTimeout(timeoutId);
+  addLog("Extraction cancelled. Returning to coffee break.");
+  resetToIdle("Observation aborted.");
+}
+
+function resetToIdle(waterMessage) {
+  gameState = 'IDLE';
+  fishingScene.setAttribute('data-state', 'IDLE');
+  btnAction.disabled = false;
+  setActionBtn("Cast Line", svgArrow);
+  lblStatus.innerText = "Extraction Status: Awaiting Input";
+  lblStatus.style.color = "var(--lime)";
+  txtWater.innerText = waterMessage;
+  updateUI();
+}
+
+// Upgrades
+function upgradeRod() {
+  if (grants >= rodCost) {
+    grants -= rodCost;
+    rodLevel++;
+    rodCost = Math.floor(rodCost * 1.6);
+    addLog("Carbon-Fiber Protocol upgraded. Reaction window increased.");
+    updateUI();
+  }
+}
+function upgradeBait() {
+  if (grants >= baitCost) {
+    grants -= baitCost;
+    baitLevel++;
+    baitCost = Math.floor(baitCost * 2.2);
+    addLog("Existential Bait upgraded. The pond feels uneasy.");
+    updateUI();
+  }
+}
+function upgradeSpeed() {
+  if (grants >= speedCost) {
+    grants -= speedCost;
+    speedLevel++;
+    speedCost = Math.floor(speedCost * 1.5);
+    addLog("Caffeinated Reels upgraded. Waiting is for the weak.");
+    updateUI();
+  }
+}
+
+// Initial UI Setup
+updateUI();
+</script>
+</body>
+</html>
