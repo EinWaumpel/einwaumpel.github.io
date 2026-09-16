@@ -18,6 +18,8 @@
       
       /* Base dynamic cell size */
       --cell-size: 34px;
+      --board-cols: 9;
+      --board-rows: 9;
 
       --bg-gradient: radial-gradient(circle at 50% 20%, #141414, #0a0a0a 75%);
       --panel-bg: rgba(10, 10, 10, 0.85);
@@ -278,9 +280,9 @@
       background: transparent;
       border: 1px solid var(--border-subtle);
       color: rgba(240, 236, 227, 0.65);
-      padding: 6px 12px;
+      padding: 8px 14px;
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -323,9 +325,9 @@
     }
 
     .noguess-badge {
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 1px 4px;
+      padding: 1px 5px;
       border-radius: 0;
       background: rgba(255, 255, 255, 0.1);
       letter-spacing: 0.05em;
@@ -606,10 +608,30 @@
       font-size: 1.4rem;
       letter-spacing: 0.08em;
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+      position: relative;
     }
 
     .counter.mines { color: var(--coral); }
     .counter.timer { color: var(--lime); }
+
+    .penalty-floater {
+      position: absolute;
+      top: -10px;
+      right: -25px;
+      color: var(--coral);
+      font-size: 1.1rem;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 1.5s ease-out forwards;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+      z-index: 50;
+      font-family: 'Space Mono', monospace;
+    }
+    
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-25px) scale(1.25); }
+    }
 
     .reset-btn {
       background: linear-gradient(160deg, #1a1a1a, var(--black) 60%);
@@ -785,6 +807,27 @@
       border-radius: 0;
     }
 
+    /* Animation rules */
+    body.animations-enabled .anim-enter {
+      animation: boardEntrance 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes boardEntrance {
+      0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    body.animations-enabled .cell.opened {
+      animation: cellReveal 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes cellReveal {
+      0% { transform: scale(0.5); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    body.animations-enabled .cell.flagged svg {
+      animation: flagPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
     .field-outer-container {
       display: grid;
       grid-template-areas:
@@ -813,6 +856,7 @@
       display: grid;
       gap: 3px;
       padding: 0 7px;
+      grid-template-columns: repeat(var(--board-cols, 9), var(--cell-size, 34px));
     }
 
     .axis-row-container {
@@ -820,6 +864,7 @@
       display: grid;
       gap: 3px;
       padding: 7px 0;
+      grid-template-rows: repeat(var(--board-rows, 9), var(--cell-size, 34px));
     }
 
     .axis-label {
@@ -834,13 +879,13 @@
     }
 
     .axis-col-container .axis-label {
-      width: var(--cell-size);
+      width: var(--cell-size, 34px);
       height: 22px;
     }
 
     .axis-row-container .axis-label {
       width: 22px;
-      height: var(--cell-size);
+      height: var(--cell-size, 34px);
     }
 
     .axis-label.active-axis {
@@ -860,17 +905,18 @@
       border: 1px solid var(--border-subtle);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.6);
       width: fit-content;
+      grid-template-columns: repeat(var(--board-cols, 9), var(--cell-size, 34px));
     }
 
     .cell {
-      width: var(--cell-size);
-      height: var(--cell-size);
+      width: var(--cell-size, 34px);
+      height: var(--cell-size, 34px);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Space Mono', monospace;
       font-weight: 700;
-      font-size: calc(var(--cell-size) * 0.55);
+      font-size: calc(var(--cell-size, 34px) * 0.55);
       border-radius: 0;
       cursor: none;
       transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.12s ease, transform 0.08s ease;
@@ -937,7 +983,6 @@
     .cell.flagged svg {
       filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.8));
       transform: scale(1.1);
-      animation: flagPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @keyframes flagPop {
@@ -1131,7 +1176,7 @@
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
-    .cell.opened[data-num="0"] { color: #ffffff; text-shadow: none; }
+    .cell.opened[data-num="0"] { color: var(--color-0); text-shadow: none; }
     .cell[data-num="1"] { color: var(--color-1); }
     .cell[data-num="2"] { color: var(--color-2); }
     .cell[data-num="3"] { color: var(--color-3); }
@@ -1733,7 +1778,7 @@
     }
   </style>
 </head>
-<body class="flat-mode">
+<body class="flat-mode animations-enabled">
 
   <canvas id="bg-particles-canvas"></canvas>
 
@@ -1742,6 +1787,13 @@
 
   <!-- FIXED/RESPONSIVE TOP-RIGHT CONTROLS CLUSTER -->
   <div class="top-controls-cluster">
+    <button id="anim-toggle" class="cluster-btn is-off" onclick="toggleAnimations()" title="Toggle UI Animations">
+      <svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+      </svg>
+      <span id="anim-toggle-label">Anim: On</span>
+    </button>
+  
     <button id="auto-toggle" class="cluster-btn is-off" onclick="toggleAutoComplete()" title="Toggle Auto Complete Solver">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="5 3 19 12 5 21 5 3"/>
@@ -1890,7 +1942,9 @@
 
         <button class="noguess-toggle-btn is-off" id="hard-mode-toggle" onclick="toggleHardMode(event)" title="Hard Mode: Reveal 1 tile per click, removes zero-cascades and neighbor/chord highlights.">
           <span class="noguess-icon">
-            <svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+            <svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 9.36l-7.1 7.1a1 1 0 0 1-1.41-1.41l7.1-7.1a6 6 0 0 1 9.36-7.94l-3.77 3.77a1 1 0 0 0 0 1.4z"></path>
+            </svg>
           </span>
           <span>Hard Mode:</span>
           <span class="noguess-badge" id="hard-mode-badge">OFF</span>
@@ -2227,8 +2281,27 @@
       }
     }
 
-    /* PARTICLE FX TOGGLE (UNDER 3D TOGGLE) */
+    /* PARTICLE FX TOGGLE & ANIMATIONS */
     let particlesEnabled = localStorage.getItem('icur_particles_enabled') !== 'false'; // Default: ON
+    let animationsEnabled = localStorage.getItem('icur_animations_enabled') !== 'false';
+
+    function toggleAnimations() {
+      animationsEnabled = !animationsEnabled;
+      localStorage.setItem('icur_animations_enabled', animationsEnabled);
+      updateAnimationsUI();
+      playTone(animationsEnabled ? 640 : 320, 0.05);
+    }
+
+    function updateAnimationsUI() {
+      document.body.classList.toggle('animations-enabled', animationsEnabled);
+      const btn = document.getElementById('anim-toggle');
+      const label = document.getElementById('anim-toggle-label');
+      if(btn) {
+        btn.classList.toggle('is-off', !animationsEnabled);
+        btn.classList.toggle('is-active', animationsEnabled);
+      }
+      if(label) label.textContent = animationsEnabled ? 'Anim: On' : 'Anim: Off';
+    }
 
     function toggleParticles() {
       particlesEnabled = !particlesEnabled;
@@ -2476,11 +2549,25 @@
       };
     }
 
+    function showPenaltyText(penalty) {
+       if (!animationsEnabled) return;
+       const timerContainer = document.querySelector('.counter.timer');
+       const floater = document.createElement('div');
+       floater.className = 'penalty-floater';
+       floater.textContent = `+${penalty}s`;
+       timerContainer.appendChild(floater);
+       setTimeout(() => { if(floater.parentNode) floater.parentNode.removeChild(floater); }, 1500);
+    }
+
     function undoLastMove() {
       if (!lastMoveSnapshot || gameStatus !== 'lost') return;
 
       const snapshot = lastMoveSnapshot;
-      secondsElapsed = snapshot.secondsElapsed;
+      
+      const penalty = 10 + Math.floor(currentConfig.mines / 3);
+      secondsElapsed = snapshot.secondsElapsed + penalty;
+      if (secondsElapsed > 999) secondsElapsed = 999;
+      
       flagsPlaced = snapshot.flagsPlaced;
 
       for (let r = 0; r < currentConfig.rows; r++) {
@@ -2528,6 +2615,7 @@
       document.getElementById('undo-banner').classList.add('is-hidden');
       updateMineCounter();
       startTimer();
+      showPenaltyText(penalty);
 
       playTone(420, 0.08, 'triangle');
       setTimeout(() => playTone(680, 0.14, 'triangle'), 70);
@@ -3395,8 +3483,10 @@
     }
 
     function resetGame() {
-      clearInterval(timerInterval);
-      timerInterval = null;
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
 
       if (autoCompleteTimer) {
         clearTimeout(autoCompleteTimer);
@@ -3579,6 +3669,13 @@
       updateHardModeUI();
       updateAllSatisfiedStates();
       scaleGameCard();
+
+      if (animationsEnabled) {
+        const bWrap = document.getElementById('board-wrapper');
+        bWrap.classList.remove('anim-enter');
+        void bWrap.offsetWidth; // trigger reflow
+        bWrap.classList.add('anim-enter');
+      }
     }
 
     function highlightAxes(row, col) {
@@ -4071,7 +4168,10 @@
 
       if (unrevealedSafeCount === 0) {
         gameStatus = 'won';
-        clearInterval(timerInterval);
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
 
         if (autoCompleteTimer) {
           clearTimeout(autoCompleteTimer);
@@ -4101,7 +4201,10 @@
 
     function triggerGameOver(hitCell) {
       gameStatus = 'lost';
-      clearInterval(timerInterval);
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
 
       if (autoCompleteTimer) {
         clearTimeout(autoCompleteTimer);
@@ -4149,6 +4252,7 @@
     applyThemeColor(currentThemeColor);
     applyVariantMode();
     updateParticlesUI();
+    updateAnimationsUI();
     updateHardModeUI();
     updateHideUncoveredUI();
     updateNoGuessUI();
