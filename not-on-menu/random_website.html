@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Institute for Completely Unnecessary Research™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lime: #c8ff00;
+    --black: #0a0a0a;
+    --offwhite: #f0ece3;
+    --coral: #ff4d3a;
+    --blue: #0033ff;
+    --cream: #fdf8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--offwhite);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--lime);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  #cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid var(--lime);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: difference;
+  }
+  body:hover #cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.4;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--lime);
+    color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 0.05em;
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid var(--lime);
+    border-bottom: 1px solid var(--lime);
+    padding: 10px 0;
+  }
+  .marquee-inner {
+    display: inline-block;
+    animation: marquee 18s linear infinite;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    padding: clamp(40px, 8vw, 120px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+  .institute-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 32px;
+    opacity: 0.7;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 160px);
+    line-height: 0.9;
+    color: var(--offwhite);
+    margin-bottom: 24px;
+  }
+  .hero-title span {
+    color: var(--lime);
+    display: block;
+  }
+  .hero-subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-weight: 300;
+    color: rgba(240,236,227,0.6);
+    line-height: 1.5;
+    max-width: 480px;
+    margin-bottom: 48px;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--lime);
+    padding: 16px 32px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 2px solid var(--lime);
+    cursor: none;
+    width: fit-content;
+  }
+  .hero-cta:hover { background: transparent; color: var(--lime); transform: translate(4px, -4px); }
+  .hero-cta .arrow { transition: transform 0.2s; }
+  .hero-cta:hover .arrow { transform: translate(4px, -4px); }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  #canvas-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+  .hero-counter {
+    position: absolute;
+    bottom: 48px;
+    right: 48px;
+    text-align: right;
+    z-index: 2;
+  }
+  .counter-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: var(--coral);
+    line-height: 1;
+  }
+  .counter-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: clamp(40px, 8vw, 120px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    z-index: 2;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--offwhite);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--lime);
+    animation: scrollline 2s ease-in-out infinite;
+  }
+  @keyframes scrollline { 0%{left:-100%} 50%{left:100%} 100%{left:100%} }
+
+  /* STATS STRIP */
+  .stats-strip {
+    background: var(--offwhite);
+    color: var(--black);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 2px solid var(--black);
+  }
+  .stat-item {
+    padding: 40px 32px;
+    border-right: 1px solid rgba(10,10,10,0.15);
+    transition: background 0.2s;
+  }
+  .stat-item:hover { background: var(--lime); }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 80px);
+    line-height: 1;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .stat-desc {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* RESEARCH SECTION */
+  #research {
+    padding: clamp(60px, 10vw, 140px) clamp(24px, 6vw, 80px);
+    position: relative;
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 100px);
+    line-height: 0.95;
+    margin-bottom: 64px;
+  }
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(240,236,227,0.1);
+  }
+  .research-card {
+    background: var(--black);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .research-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--lime);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .research-card:hover::before { transform: scaleX(1); }
+  .research-card:hover { background: #111; }
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 100px;
+    color: rgba(200,255,0,0.06);
+    position: absolute;
+    top: -10px; right: 20px;
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+  .research-card:hover .card-num { color: rgba(200,255,0,0.12); }
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(24px, 2.5vw, 34px);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .card-body {
+    font-size: 13px;
+    line-height: 1.8;
+    opacity: 0.5;
+    margin-bottom: 32px;
+  }
+  .card-link {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lime);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: none;
+  }
+  .card-link::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+  .card-link:hover::after { transform: translateX(6px); }
+
+  /* RANDOM FACT MACHINE */
+  #factmachine {
+    background: var(--coral);
+    color: var(--black);
+    padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 80px);
+    position: relative;
+    overflow: hidden;
+  }
+  #factmachine::before {
+    content: '?';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 500px;
+    color: rgba(0,0,0,0.08);
+    position: absolute;
+    right: -60px;
+    top: -80px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .fact-label {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0.6;
+  }
+  .fact-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+  .fact-display {
+    background: var(--black);
+    color: var(--offwhite);
+    padding: 48px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 32px;
+    max-width: 800px;
+  }
+  .fact-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(22px, 3vw, 38px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.4;
+    transition: opacity 0.3s;
+  }
+  .fact-btn {
+    background: var(--black);
+    color: var(--lime);
+    border: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 18px 40px;
+    cursor: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .fact-btn:hover { background: var(--lime); color: var(--black); transform: translate(3px, -3px); }
+  .fact-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    margin-left: 24px;
+    opacity: 0.4;
+    vertical-align: middle;
+  }
+
+  /* MANIFESTO */
+  #manifesto {
+    padding: clamp(60px, 10vw, 140px) clamp(24px, 6vw, 80px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 100px);
+    align-items: center;
+    border-top: 1px solid rgba(240,236,227,0.1);
+  }
+  .manifesto-quote {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(28px, 4vw, 60px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--offwhite);
+  }
+  .manifesto-quote em {
+    color: var(--lime);
+    font-style: normal;
+  }
+  .manifesto-body p {
+    font-size: 14px;
+    line-height: 2;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+  .manifesto-sig {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .sig-line {
+    width: 48px;
+    height: 1px;
+    background: var(--lime);
+  }
+  .sig-name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* HOVER SCRAMBLE TITLE */
+  .scramble-title { cursor: none; }
+
+  /* RANDOM VISITOR COUNTER */
+  .vis-counter-wrap {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: rgba(10,10,10,0.9);
+    border: 1px solid rgba(200,255,0,0.2);
+    padding: 12px 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .vis-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--lime);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+  /* FOOTER */
+  footer {
+    background: var(--offwhite);
+    color: var(--black);
+    padding: 60px clamp(24px, 6vw, 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.9;
+    color: var(--black);
+  }
+  .footer-logo span { color: var(--coral); }
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: right;
+  }
+  .footer-links a {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(10,10,10,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .footer-links a:hover { color: var(--coral); }
+  .footer-copy {
+    width: 100%;
+    border-top: 1px solid rgba(10,10,10,0.1);
+    padding-top: 24px;
+    font-size: 11px;
+    opacity: 0.3;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* FLOATING BADGE */
+  .float-badge {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--coral);
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 200;
+    animation: spin 20s linear infinite;
+    text-align: center;
+    line-height: 1.5;
+    cursor: none;
+  }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 20px clamp(24px, 6vw, 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.8), transparent);
+    backdrop-filter: blur(0px);
+    transition: backdrop-filter 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.9);
+    border-bottom: 1px solid rgba(240,236,227,0.05);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--offwhite);
+    text-decoration: none;
+    cursor: none;
+  }
+  .nav-logo span { color: var(--lime); }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,236,227,0.5);
+    text-decoration: none;
+    cursor: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--lime); }
+
+  /* TICKER TAPE */
+  .ticker {
+    background: var(--blue);
+    color: white;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: marquee 30s linear infinite;
+  }
+  .ticker-sep { color: var(--lime); margin: 0 20px; }
+
+  /* RANDOM COLOR FLASH SECTION */
+  #weirdzone {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--black);
+  }
+  .weird-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 12vw, 180px);
+    text-align: center;
+    line-height: 0.9;
+    position: relative;
+    z-index: 2;
+    user-select: none;
+    cursor: none;
+  }
+  .weird-text span {
+    display: block;
+    transition: color 0.1s;
+  }
+  .floating-shape {
+    position: absolute;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .research-grid { grid-template-columns: 1fr; }
+    #manifesto { grid-template-columns: 1fr; }
+    .float-badge { display: none; }
+  }
+  @media (max-width: 600px) {
+    .stats-strip { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- FLOATING BADGE -->
+<div class="float-badge">Totally&nbsp;•&nbsp;Real&nbsp;•&nbsp;Science&nbsp;•&nbsp;Trust&nbsp;Us&nbsp;•</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">ICUR<span>™</span></a>
+  <ul class="nav-links">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#factmachine">Facts</a></li>
+    <li><a href="#manifesto">Manifesto</a></li>
+    <li><a href="#weirdzone">The Zone</a></li>
+  </ul>
+</nav>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <span class="marquee-inner">
+    BREAKING: Scientists discover that scientists discover things &nbsp;✦&nbsp; NEW STUDY: 100% of studied studies have been studied &nbsp;✦&nbsp; ALERT: Cheese consumption directly correlated with cheese consumption &nbsp;✦&nbsp; URGENT: This marquee is still scrolling &nbsp;✦&nbsp; WOW: Local man exists &nbsp;✦&nbsp;
+    BREAKING: Scientists discover that scientists discover things &nbsp;✦&nbsp; NEW STUDY: 100% of studied studies have been studied &nbsp;✦&nbsp; ALERT: Cheese consumption directly correlated with cheese consumption &nbsp;✦&nbsp; URGENT: This marquee is still scrolling &nbsp;✦&nbsp; WOW: Local man exists &nbsp;✦&nbsp;
+  </span>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="institute-tag">Est. 1987 — Vol. XXXIV — Third Floor, Behind the Vending Machine</p>
+    <h1 class="hero-title">
+      <span>We</span>
+      Study<br>Stuff
+    </h1>
+    <p class="hero-subtitle">Pioneering research into things nobody asked about, funded by people who should've known better.</p>
+    <a href="#research" class="hero-cta">
+      Begin the Journey
+      <span class="arrow">↗</span>
+    </a>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll to discover
+    </div>
+  </div>
+  <div class="hero-right">
+    <canvas id="canvas-bg"></canvas>
+    <div class="hero-counter">
+      <div class="counter-num" id="live-counter">0</div>
+      <div class="counter-label">Unnecessary studies published today</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-inner">
+    ICUR STOCK: ∞ <span class="ticker-sep">|</span> FACTS GENERATED: LOTS <span class="ticker-sep">|</span> COFFEE CONSUMED (L): 47.3 <span class="ticker-sep">|</span> PENCILS LOST: 2 <span class="ticker-sep">|</span> MORALE: WAVERING <span class="ticker-sep">|</span> VENDING MACHINE STATUS: JAMMED <span class="ticker-sep">|</span> PAPERS PUBLISHED: SEVERAL <span class="ticker-sep">|</span> MYSTERIES SOLVED: 0 <span class="ticker-sep">|</span> MYSTERIES CREATED: 14 <span class="ticker-sep">|</span>
+    ICUR STOCK: ∞ <span class="ticker-sep">|</span> FACTS GENERATED: LOTS <span class="ticker-sep">|</span> COFFEE CONSUMED (L): 47.3 <span class="ticker-sep">|</span> PENCILS LOST: 2 <span class="ticker-sep">|</span> MORALE: WAVERING <span class="ticker-sep">|</span> VENDING MACHINE STATUS: JAMMED <span class="ticker-sep">|</span> PAPERS PUBLISHED: SEVERAL <span class="ticker-sep">|</span> MYSTERIES SOLVED: 0 <span class="ticker-sep">|</span> MYSTERIES CREATED: 14 <span class="ticker-sep">|</span>
+  </span>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">4,200</div>
+    <div class="stat-desc">Unpublished papers lost in the break room</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">99%</div>
+    <div class="stat-desc">Confidence that we lack confidence</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-desc">Things we still don't understand</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3</div>
+    <div class="stat-desc">Functional staplers on campus</div>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<section id="research">
+  <p class="section-label">Current Research Initiatives</p>
+  <h2 class="section-title scramble-title">Our<br>Work<br>(Probably)</h2>
+  <div class="research-grid">
+    <div class="research-card">
+      <div class="card-num">01</div>
+      <p class="card-tag">Behavioural Sciences</p>
+      <h3 class="card-title">Why Do People Put Empty Cartons Back in the Fridge?</h3>
+      <p class="card-body">A seven-year longitudinal study following 12 households, 40 refrigerators, and one very confused postdoc.</p>
+      <a href="#" class="card-link">Read the preprint</a>
+    </div>
+    <div class="research-card">
+      <div class="card-num">02</div>
+      <p class="card-tag">Applied Physics</p>
+      <h3 class="card-title">The Exact Moment Toast Decides to Fall Buttered-Side Down</h3>
+      <p class="card-body">Quantum-level investigation into the malicious sentience of breakfast foods. Grant funded by Big Bread.</p>
+      <a href="#" class="card-link">View the data</a>
+    </div>
+    <div class="research-card">
+      <div class="card-num">03</div>
+      <p class="card-tag">Cognitive Neurology</p>
+      <h3 class="card-title">The Brain Region Responsible for Forgetting Why You Entered a Room</h3>
+      <p class="card-body">We found it. It's shaped like a small cloud and it's definitely judging you right now.</p>
+      <a href="#" class="card-link">Explore findings</a>
+    </div>
+    <div class="research-card">
+      <div class="card-num">04</div>
+      <p class="card-tag">Ecology</p>
+      <h3 class="card-title">Seagulls: Are They Just Birds, or Also Our Enemies?</h3>
+      <p class="card-body">Field research conducted at 14 coastal car parks. Sample size: everyone who has ever had chips outdoors.</p>
+      <a href="#" class="card-link">Download report</a>
+    </div>
+    <div class="research-card">
+      <div class="card-num">05</div>
+      <p class="card-tag">Temporal Studies</p>
+      <h3 class="card-title">Time Moves Differently When You're Waiting for a Printer</h3>
+      <p class="card-body">High-precision chronometry combined with existential dread. Peer-reviewed by people also waiting for printers.</p>
+      <a href="#" class="card-link">Experience the paper</a>
+    </div>
+    <div class="research-card">
+      <div class="card-num">06</div>
+      <p class="card-tag">Linguistics</p>
+      <h3 class="card-title">The Sound of Someone Saying "Just Quickly" Before Taking 45 Minutes</h3>
+      <p class="card-body">Acoustic spectral analysis of the phrase that has ended more meetings than fire alarms.</p>
+      <a href="#" class="card-link">Listen to the data</a>
+    </div>
+  </div>
+</section>
+
+<!-- WEIRD ZONE -->
+<section id="weirdzone">
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+    <svg class="floating-shape" width="600" height="600" style="left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);animation:spin 60s linear infinite;">
+      <polygon points="300,20 580,460 20,460" fill="none" stroke="#c8ff00" stroke-width="1"/>
+      <polygon points="300,80 520,420 80,420" fill="none" stroke="#ff4d3a" stroke-width="0.5"/>
+      <circle cx="300" cy="300" r="200" fill="none" stroke="#0033ff" stroke-width="0.5"/>
+    </svg>
+  </div>
+  <div class="weird-text" id="weird-words">
+    <span id="w1" style="color:var(--lime)">HOVER</span>
+    <span id="w2" style="color:var(--coral)">OVER</span>
+    <span id="w3" style="color:var(--offwhite)">THIS</span>
+    <span id="w4" style="color:var(--blue)">TEXT</span>
+  </div>
+</section>
+
+<!-- FACT MACHINE -->
+<section id="factmachine">
+  <p class="fact-label">The Completely Accredited</p>
+  <h2 class="fact-title">Random Fact<br>Generator 3000™</h2>
+  <div class="fact-display">
+    <p class="fact-text" id="fact-text">Press the button. Go on. You know you want to.</p>
+  </div>
+  <button class="fact-btn" id="fact-btn" onclick="generateFact()">
+    Generate Fact ⚡
+  </button>
+  <span class="fact-count" id="fact-count">0 facts generated</span>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div>
+    <blockquote class="manifesto-quote">
+      "The most important research is the research <em>nobody asked for</em>."
+    </blockquote>
+  </div>
+  <div class="manifesto-body">
+    <p>We founded the Institute for Completely Unnecessary Research in 1987, following a dispute about whether hot dogs are sandwiches. That argument remains unresolved. We have since spent 37 years and considerable funding studying things that are fascinating to exactly three people, one of whom is our landlord.</p>
+    <p>Our peer review process involves sending papers to anyone who replies to our emails. Our ethics board meets quarterly, and has not yet formed a quorum. We are accredited by the Association of Self-Accrediting Institutions (which we also founded).</p>
+    <p>We are proud to say that not a single one of our findings has been used to make anything worse. This is, we believe, our greatest contribution to humanity.</p>
+    <div class="manifesto-sig">
+      <div class="sig-line"></div>
+      <span class="sig-name">Prof. R. Absurdington, Founder & Chief Wonderer</span>
+    </div>
+  </div>
+</section>
+
+<!-- VISITOR COUNTER -->
+<div class="vis-counter-wrap">
+  <span class="vis-dot"></span>
+  <span id="vis-count">0</span> confused visitors online
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">ICUR<span>™</span></div>
+    <p style="font-size:12px;opacity:0.4;margin-top:12px;max-width:300px;line-height:1.7;">Institute for Completely Unnecessary Research. Third Floor, Behind the Vending Machine (the broken one), Somewhere, The Internet.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#">Publications</a>
+    <a href="#">Press & Media</a>
+    <a href="#">Donate (We Accept Stickers)</a>
+    <a href="#">Report a Seagull</a>
+    <a href="#">Privacy (We Have None)</a>
+  </div>
+  <div class="footer-copy">
+    <span>© 1987–Present, ICUR. All Research Probably Useless.</span>
+    <span>Powered by Coffee & Existential Curiosity</span>
+  </div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+setInterval(()=>{ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; }, 16);
+document.querySelectorAll('a,button,.research-card,.stat-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cursor.style.width='20px';cursor.style.height='20px'; ring.style.width='60px';ring.style.height='60px'; });
+  el.addEventListener('mouseleave',()=>{ cursor.style.width='12px';cursor.style.height='12px'; ring.style.width='40px';ring.style.height='40px'; });
+});
+
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', ()=>{ navbar.classList.toggle('scrolled', window.scrollY > 80); });
+
+// Canvas particle animation
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+let W, H, particles=[];
+function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; }
+resize(); window.addEventListener('resize', resize);
+class Particle{
+  constructor(){ this.reset(); }
+  reset(){
+    this.x=Math.random()*W; this.y=Math.random()*H;
+    this.vx=(Math.random()-0.5)*0.4; this.vy=(Math.random()-0.5)*0.4;
+    this.size=Math.random()*2+0.5;
+    this.color=Math.random()<0.6?'#c8ff00':Math.random()<0.5?'#ff4d3a':'#0033ff';
+    this.alpha=Math.random()*0.6+0.2;
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset(); }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=this.color; ctx.globalAlpha=this.alpha; ctx.fill(); ctx.globalAlpha=1; }
+}
+for(let i=0;i<120;i++) particles.push(new Particle());
+function drawConnections(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){ ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.strokeStyle=`rgba(200,255,0,${(1-d/100)*0.08})`; ctx.lineWidth=0.5; ctx.stroke(); }
+    }
+  }
+}
+function animCanvas(){
+  ctx.clearRect(0,0,W,H);
+  drawConnections();
+  particles.forEach(p=>{ p.update(); p.draw(); });
+  requestAnimationFrame(animCanvas);
+}
+animCanvas();
+
+// Live counter animation
+let cnt=0, target=Math.floor(Math.random()*200+100);
+const counterEl=document.getElementById('live-counter');
+function animCounter(){ if(cnt<target){ cnt+=Math.ceil((target-cnt)/20); counterEl.textContent=cnt; setTimeout(animCounter,50); } }
+setTimeout(animCounter, 800);
+
+// Visitor count
+const visEl=document.getElementById('vis-count');
+let vis=Math.floor(Math.random()*40+8);
+visEl.textContent=vis;
+setInterval(()=>{ vis+=Math.random()<0.5?1:-1; vis=Math.max(3,Math.min(99,vis)); visEl.textContent=vis; }, 3000);
+
+// Facts
+const facts = [
+  "A group of flamingos is called a 'flamboyance,' which is significantly more fabulous than anything else in nature.",
+  "The average person spends 6 months of their life waiting at red lights. The other 6 months are equally uneventful.",
+  "Wombats produce cube-shaped poop. Scientists believe this is done purely to be difficult.",
+  "The smell of rain has a name: petrichor. There is no word for the smell of Monday morning.",
+  "Sharks are older than trees. Trees are very embarrassed about this.",
+  "Cleopatra lived closer in time to the Moon landing than to the construction of the Great Pyramid. The pyramid is not aware of this.",
+  "A day on Venus is longer than a year on Venus. Venus considers this a personal achievement.",
+  "Otters hold hands when they sleep so they don't drift apart. Researchers are still recovering emotionally.",
+  "The dot over a lowercase 'i' is called a tittle. This is not a joke. We checked.",
+  "Oxford University is older than the Aztec Empire. The Aztecs had better student events.",
+  "Crows can recognize human faces and hold grudges for years. Several crows are reading this right now.",
+  "There are more possible chess games than atoms in the observable universe, and yet somehow nobody enjoys chess.",
+  "Bananas are technically berries. Strawberries are not berries. Everything is a lie.",
+  "The inventor of the frisbee was cremated and turned into a frisbee. This is his greatest invention.",
+  "A bolt of lightning contains enough energy to toast 100,000 slices of bread. No one has tried this. Yet.",
+];
+let factCount=0;
+function generateFact(){
+  const el=document.getElementById('fact-text');
+  const countEl=document.getElementById('fact-count');
+  el.style.opacity='0';
+  setTimeout(()=>{
+    el.textContent=facts[Math.floor(Math.random()*facts.length)];
+    el.style.opacity='1';
+    factCount++;
+    countEl.textContent=factCount+' fact'+(factCount!==1?'s':'')+' generated';
+  }, 300);
+}
+
+// Weird text hover colors
+const colors=['#c8ff00','#ff4d3a','#0033ff','#f0ece3','#ff00ff','#00ffff','#ff9900','#ffffff'];
+['w1','w2','w3','w4'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('mouseenter',()=>{
+    el.style.color=colors[Math.floor(Math.random()*colors.length)];
+    el.style.transform=`skewX(${(Math.random()-0.5)*20}deg) scale(${0.9+Math.random()*0.3})`;
+  });
+  el.addEventListener('mouseleave',()=>{ el.style.transform=''; });
+  setInterval(()=>{ el.style.color=colors[Math.floor(Math.random()*colors.length)]; }, 2000+Math.random()*3000);
+});
+
+// Scramble text on hover
+const scrambleEl=document.querySelector('.scramble-title');
+const scrambleOriginal=scrambleEl.textContent;
+const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*';
+let scrambling=false;
+scrambleEl.addEventListener('mouseenter',()=>{
+  if(scrambling)return; scrambling=true;
+  const words=['Maybe','Really?','Hmm…','Sure','Fine','OK','Wow','Uh…'];
+  let i=0;
+  const iv=setInterval(()=>{
+    scrambleEl.textContent=Array.from({length:10},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+    i++;
+    if(i>15){ clearInterval(iv); scrambleEl.innerHTML='Our<br>Work<br>(Probably)'; scrambling=false; }
+  }, 60);
+});
+
+// Intersection observer for fade-in
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+},{threshold:0.15});
+document.querySelectorAll('.research-card,.stat-item,.manifesto-quote,.manifesto-body').forEach(el=>{
+  el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='opacity 0.7s ease, transform 0.7s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
