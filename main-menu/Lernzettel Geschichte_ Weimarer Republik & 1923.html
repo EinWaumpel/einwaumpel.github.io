@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lernzettel Geschichte: Weimarer Republik &amp; 1923</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f1e7;--card:#fffdf8;--ink:#23222a;--mute:#6b6a73;--acc:#8c2f39;--acc2:#1f3a5f;--soft:#efe6d3;--line:#ddd2bb;--ok:#2e7d4f;--warn:#fff1c9;--warnl:#d9a520;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17161c;--card:#211f28;--ink:#eeeae0;--mute:#a09eaa;--acc:#e0707a;--acc2:#8fb2e6;--soft:#2b2832;--line:#3b3744;--ok:#6fcf97;--warn:#3a321a;--warnl:#b58a1c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17161c;--card:#211f28;--ink:#eeeae0;--mute:#a09eaa;--acc:#e0707a;--acc2:#8fb2e6;--soft:#2b2832;--line:#3b3744;--ok:#6fcf97;--warn:#3a321a;--warnl:#b58a1c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Georgia,"Times New Roman",serif}
+header{padding:2.2rem 1.2rem 1.4rem;text-align:center;background:linear-gradient(135deg,var(--acc2),var(--acc));color:#fff}
+header h1{margin:0;font-size:clamp(1.6rem,5vw,2.6rem);letter-spacing:.02em}
+header p{margin:.4rem auto 0;max-width:42rem;opacity:.92;font-size:.98rem}
+.theme{position:absolute;right:.8rem;top:calc(.6rem + env(safe-area-inset-top,0px));background:#ffffff26;border:0;color:#fff;border-radius:2rem;padding:.3rem .7rem;cursor:pointer;font-size:1rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:.4rem;overflow-x:auto;padding:.6rem .8rem}
+nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:.45rem .9rem;border-radius:2rem;cursor:pointer;font:600 .85rem system-ui,sans-serif}
+nav button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+main{max-width:50rem;margin:0 auto;padding:1.2rem .9rem 3rem}
+section{display:none}section.on{display:block;animation:f .3s}
+@keyframes f{from{opacity:0;transform:translateY(6px)}}
+h2{color:var(--acc2);font-size:1.5rem;margin:.4rem 0 1rem}
+details{background:var(--card);border:1px solid var(--line);border-radius:.8rem;margin:.7rem 0;overflow:hidden}
+summary{cursor:pointer;padding:.85rem 1rem;font:700 1.02rem system-ui,sans-serif;color:var(--acc2);list-style:none;display:flex;justify-content:space-between;gap:.5rem}
+summary::after{content:"+";color:var(--acc);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+.b{padding:0 1rem 1rem}
+.b h4{margin:1rem 0 .3rem;font:700 .8rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.07em;color:var(--acc)}
+ul,ol{margin:.3rem 0;padding-left:1.3rem}li{margin:.15rem 0}
+.box{background:var(--warn);border-left:4px solid var(--warnl);padding:.7rem .9rem;border-radius:.5rem;margin:.8rem 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;margin:.5rem 0}
+th{background:var(--acc2);color:#fff;text-align:left;padding:.45rem .6rem;font-family:system-ui,sans-serif}
+td{padding:.45rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:var(--soft)}
+.wrap{overflow-x:auto}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.6rem 0}
+.pair div{background:var(--soft);padding:.7rem;border-radius:.6rem;font-size:.93rem}
+@media(max-width:520px){.pair{grid-template-columns:1fr}}
+.tl{position:relative;margin:1rem 0 1rem .6rem;padding-left:1.4rem;border-left:3px solid var(--line)}
+.ev{position:relative;background:var(--card);border:1px solid var(--line);border-radius:.7rem;padding:.6rem .9rem;margin:.6rem 0}
+.ev::before{content:"";position:absolute;left:-1.95rem;top:.9rem;width:.9rem;height:.9rem;border-radius:50%;background:var(--acc);border:3px solid var(--bg)}
+.ev b{display:block;color:var(--acc);font:700 .85rem system-ui,sans-serif}
+.ev.k::before{background:var(--acc2)}
+.chip{display:inline-flex;gap:.3rem;margin:0 .3rem .6rem 0}
+.f button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:.3rem .8rem;border-radius:2rem;cursor:pointer;font:600 .8rem system-ui,sans-serif;margin:0 .3rem .5rem 0}
+.f button.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
+input[type=search]{width:100%;padding:.7rem 1rem;border-radius:2rem;border:1px solid var(--line);background:var(--card);color:var(--ink);font:1rem system-ui,sans-serif;margin-bottom:.8rem}
+.terms{display:grid;gap:.5rem}
+.term{background:var(--card);border:1px solid var(--line);border-radius:.7rem;padding:.7rem .9rem;cursor:pointer}
+.term strong{color:var(--acc2);font-family:system-ui,sans-serif}
+.term span{display:none;margin-top:.3rem}.term.o span{display:block}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:.4rem;margin:.6rem 0 1.4rem}
+.chain div{background:var(--card);border:1px solid var(--line);border-radius:.6rem;padding:.5rem .7rem;font-size:.9rem;flex:1 1 9rem;position:relative}
+.chain div b{display:block;color:var(--acc);font:700 .75rem system-ui,sans-serif}
+.q{background:var(--card);border:1px solid var(--line);border-radius:.8rem;padding:.9rem 1rem;margin:.7rem 0}
+.q p{margin:0 0 .5rem;font-weight:700}
+.q button{border:1px solid var(--acc2);background:transparent;color:var(--acc2);border-radius:2rem;padding:.3rem .9rem;cursor:pointer;font:600 .85rem system-ui,sans-serif;margin-right:.4rem}
+.q button.g.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.ans{display:none;margin-top:.7rem;padding:.7rem .9rem;background:var(--soft);border-radius:.6rem}.ans.o{display:block}
+.prog{height:.6rem;background:var(--soft);border-radius:1rem;overflow:hidden;margin:.4rem 0 1rem}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.tips li::marker{color:var(--acc);font-weight:700}
+</style>
+</head>
+<body>
+<button class="theme" id="th" aria-label="Design wechseln">◐</button>
+<header>
+<h1>Die Weimarer Republik &amp; das Krisenjahr 1923</h1>
+<p>Dein interaktiver Lernzettel für die Geschichtsarbeit: Ereignisse, Daten, Personen, Begriffe und Übungsfragen.</p>
+</header>
+<nav id="nav"></nav>
+<main>
+
+<section id="t1">
+<h2>Teil 1: Die Entstehung der Weimarer Republik (1918–1919)</h2>
+<details open><summary>1. Ausgangslage: Ende des Ersten Weltkriegs</summary><div class="b">
+<p>Im Herbst 1918 befand sich Deutschland in einer schwierigen Situation:</p>
+<ul><li>Deutschland hatte den Ersten Weltkrieg (1914–1918) praktisch verloren.</li><li>Die Bevölkerung litt unter Hunger, Armut und schlechter Versorgung.</li><li>Viele Soldaten waren kriegsmüde.</li><li>Der Kaiser und die Regierung verloren immer mehr Unterstützung.</li><li>Die Menschen forderten politische Veränderungen.</li></ul>
+<div class="box"><b>Wichtig:</b> Viele Menschen wollten keinen Kaiser mehr und forderten eine Demokratie.</div></div></details>
+
+<details><summary>2. Die Novemberrevolution 1918</summary><div class="b">
+<p>Sie begann Ende Oktober 1918.</p>
+<h4>Ursachen</h4>
+<ul><li>Die Marine sollte zu einem letzten großen Kampf gegen Großbritannien auslaufen.</li><li>Die Matrosen weigerten sich, weil sie den Krieg für verloren hielten.</li><li>Am 3. November 1918 kam es in Kiel zu einem Aufstand.</li><li>Die Revolution breitete sich auf viele Städte aus.</li></ul>
+<h4>Wichtige Ereignisse</h4>
+<div class="wrap"><table><tr><th>Datum</th><th>Ereignis</th></tr>
+<tr><td>3. November 1918</td><td>Matrosenaufstand in Kiel</td></tr><tr><td>9. November 1918</td><td>Kaiser Wilhelm II. dankt ab</td></tr><tr><td>9. November 1918</td><td>Philipp Scheidemann ruft die Republik aus</td></tr><tr><td>9. November 1918</td><td>Karl Liebknecht ruft eine sozialistische Republik aus</td></tr><tr><td>11. November 1918</td><td>Waffenstillstand beendet die Kämpfe</td></tr></table></div>
+<h4>Zwei Vorstellungen</h4>
+<div class="pair"><div><b>Philipp Scheidemann (SPD)</b><br>Wollte eine parlamentarische Demokratie mit freien Wahlen.</div><div><b>Karl Liebknecht (Spartakusbund)</b><br>Wollte eine sozialistische Räterepublik, in der Arbeiter- und Soldatenräte die Macht übernehmen.</div></div></div></details>
+
+<details><summary>3. Die Gründung der Weimarer Republik</summary><div class="b">
+<ul><li>Friedrich Ebert (SPD) wurde Vorsitzender des Rates der Volksbeauftragten.</li><li>Es sollte eine demokratische Verfassung entstehen.</li><li>Im Januar 1919 fanden Wahlen zur Nationalversammlung statt.</li><li>Die Nationalversammlung tagte in Weimar, weil Berlin politisch unruhig war.</li><li>Am 11. August 1919 wurde die Weimarer Verfassung unterzeichnet.</li></ul>
+<h4>Wichtige Personen</h4>
+<div class="wrap"><table><tr><th>Person</th><th>Bedeutung</th></tr><tr><td>Friedrich Ebert</td><td>Erster Reichspräsident</td></tr><tr><td>Philipp Scheidemann</td><td>Rief die Republik aus</td></tr><tr><td>Karl Liebknecht</td><td>Wollte eine sozialistische Räterepublik</td></tr><tr><td>Rosa Luxemburg</td><td>Führende Vertreterin des Spartakusbundes</td></tr></table></div></div></details>
+
+<details><summary>4. Die Weimarer Verfassung</summary><div class="b">
+<p>Sie machte Deutschland zu einer parlamentarischen Demokratie.</p>
+<h4>Merkmale</h4>
+<ul><li>Deutschland wurde eine Republik.</li><li>Der Reichstag wurde vom Volk gewählt.</li><li>Frauen und Männer ab 20 Jahren durften wählen.</li><li>Es gab Meinungs-, Presse- und Versammlungsfreiheit.</li><li>Der Reichspräsident wurde direkt vom Volk gewählt.</li><li>Der Reichskanzler leitete die Regierung.</li></ul>
+<h4>Die drei wichtigsten Verfassungsorgane</h4>
+<div class="wrap"><table><tr><th>Organ</th><th>Aufgabe</th></tr><tr><td>Reichstag</td><td>Beschloss Gesetze und kontrollierte die Regierung</td></tr><tr><td>Reichspräsident</td><td>Staatsoberhaupt, ernannte den Reichskanzler</td></tr><tr><td>Reichsregierung</td><td>Führte die Politik und setzte Gesetze um</td></tr></table></div>
+<div class="box"><b>Artikel 48 – besonders wichtig!</b><br>Der Reichspräsident durfte im Notfall mit Notverordnungen regieren.<br><b>Problem:</b> Dadurch konnte die Demokratie geschwächt werden, weil er teilweise am Parlament vorbei regieren konnte.</div></div></details>
+
+<details><summary>5. Probleme und Belastungen der jungen Republik</summary><div class="b">
+<p>Die Republik hatte von Anfang an viele Gegner und Schwierigkeiten.</p>
+<ul><li><b>Linke Gegner:</b> Wollten teilweise eine kommunistische Revolution.</li><li><b>Rechte Gegner:</b> Wollten die Monarchie zurück oder eine autoritäre Regierung.</li><li><b>Dolchstoßlegende:</b> Die falsche Behauptung, das Heer sei nicht militärisch besiegt, sondern von Politikern und anderen Gruppen „verraten“ worden.</li><li><b>Versailler Vertrag:</b> Viele Deutsche empfanden die Bedingungen als ungerecht.</li></ul>
+<h4>Der Versailler Vertrag (28. Juni 1919) – Deutschland musste:</h4>
+<ol><li>Die alleinige Kriegsschuld im Artikel 231 anerkennen.</li><li>Hohe Reparationszahlungen leisten.</li><li>Gebiete abgeben.</li><li>Seine Armee auf 100.000 Soldaten verkleinern.</li><li>Auf Luftstreitkräfte und U-Boote verzichten.</li></ol>
+<div class="box"><b>Folge:</b> Die neue Demokratie wurde von vielen Menschen für die Niederlage und den Versailler Vertrag verantwortlich gemacht.</div></div></details>
+</section>
+
+<section id="t2">
+<h2>Teil 2: Das Krisenjahr 1923</h2>
+<p>1923 war eines der schwersten Jahre der Weimarer Republik. Deutschland wurde gleichzeitig von mehreren Krisen erschüttert.</p>
+<details open><summary>1. Die Ausgangslage</summary><div class="b"><ul><li>Hohe Kriegsschulden</li><li>Hohe Reparationszahlungen</li><li>Wirtschaftliche Schwierigkeiten</li><li>Politische Unzufriedenheit</li><li>Immer stärker werdende Inflation</li></ul></div></details>
+
+<details><summary>2. Die Ruhrbesetzung (Januar 1923)</summary><div class="b">
+<h4>Warum wurde das Ruhrgebiet besetzt?</h4>
+<ul><li>Deutschland sollte Reparationen leisten.</li><li>Es lieferte unter anderem Kohle und Holz nicht wie vereinbart.</li><li>Frankreich und Belgien besetzten deshalb im Januar 1923 das Ruhrgebiet.</li></ul>
+<h4>Reaktion: passiver Widerstand</h4>
+<ul><li>Arbeiter sollten nicht mehr arbeiten.</li><li>Fabriken und Betriebe sollten stillstehen.</li><li>Die Bevölkerung sollte nicht mit den Besatzern zusammenarbeiten.</li></ul>
+<h4>Folgen</h4>
+<ul><li>Die Wirtschaft im Ruhrgebiet kam weitgehend zum Stillstand.</li><li>Deutschland verdiente weniger Geld.</li><li>Die Regierung unterstützte die streikenden Arbeiter finanziell.</li><li>Dafür wurde immer mehr Geld gedruckt.</li><li>Die Inflation verschlimmerte sich drastisch.</li></ul></div></details>
+
+<details><summary>3. Die Hyperinflation 1923</summary><div class="b">
+<p><b>Inflation:</b> Die Preise steigen und das Geld verliert an Kaufkraft.<br><b>Hyperinflation:</b> Extrem starke und schnelle Inflation. Das Geld verliert in kurzer Zeit fast vollständig seinen Wert.</p>
+<h4>Ursachen</h4>
+<ol><li>Hohe Kriegsschulden.</li><li>Große finanzielle Probleme des Staates.</li><li>Wegen des passiven Widerstands musste die Regierung viele Menschen bezahlen, obwohl kaum produziert wurde.</li><li>Dafür wurde immer mehr Geld gedruckt.</li><li>Dadurch verlor die Mark immer mehr an Wert.</li></ol>
+<h4>Folgen</h4>
+<ul><li>Lebensmittel und andere Waren wurden extrem teuer.</li><li>Menschen brauchten riesige Mengen Geld für alltägliche Einkäufe.</li><li>Ersparnisse verloren ihren Wert.</li><li>Besonders Menschen mit festen Einkommen und Sparguthaben litten.</li><li>Viele verloren das Vertrauen in den Staat und die Demokratie.</li></ul>
+<div class="box"><b>Beispiel:</b> Ein Brot konnte innerhalb kurzer Zeit immer teurer werden. Man musste sein Geld möglichst schnell ausgeben, weil es sonst weiter an Wert verlor.</div></div></details>
+
+<details><summary>4. Der Hitlerputsch (8./9. November 1923)</summary><div class="b">
+<p>Adolf Hitler und seine Anhänger wollten die demokratische Regierung in Berlin gewaltsam stürzen.</p>
+<h4>Ablauf</h4>
+<ul><li>Am 8. November 1923 versuchte Hitler in München, die Macht zu übernehmen.</li><li>Er wollte von Bayern aus einen Marsch nach Berlin starten.</li><li>Am 9. November marschierten die Putschisten durch München.</li><li>Die Polizei stoppte den Putsch, er scheiterte.</li><li>Hitler wurde später verhaftet und zu einer Gefängnisstrafe verurteilt.</li></ul>
+<h4>Folgen</h4>
+<ul><li>Der Putsch zeigte, wie gefährlich rechte Gegner für die Demokratie waren.</li><li>Hitler wurde durch den Prozess in ganz Deutschland bekannter.</li><li>Im Gefängnis schrieb er Teile von „Mein Kampf“.</li></ul>
+<div class="box"><b>Merke:</b> Der Hitlerputsch scheiterte, aber er zeigte die politische Instabilität der Weimarer Republik.</div></div></details>
+
+<details><summary>5. Die Beendigung der Krise</summary><div class="b">
+<p>Die Regierung unter Reichskanzler Gustav Stresemann führte wichtige Maßnahmen durch:</p>
+<ol><li>Im September 1923 wurde der passive Widerstand beendet.</li><li>Am 15. November 1923 wurde die Rentenmark eingeführt.</li><li>Sie stabilisierte die Währung und stoppte die Hyperinflation.</li><li>Die Wirtschaft konnte sich langsam erholen.</li></ol>
+<h4>Wer war Gustav Stresemann?</h4>
+<ul><li>Reichskanzler von August bis November 1923.</li><li>Später Außenminister.</li><li>Beendete den passiven Widerstand.</li><li>Trug entscheidend zur Stabilisierung Deutschlands bei.</li></ul></div></details>
+</section>
+
+<section id="daten">
+<h2>Die wichtigsten Daten</h2>
+<div class="f" id="df"><button class="on" data-f="all">Alle</button><button data-f="18">1918</button><button data-f="19">1919</button><button data-f="23">1923</button></div>
+<div class="tl" id="tl"></div>
+</section>
+
+<section id="begriffe">
+<h2>Wichtige Begriffe</h2>
+<input type="search" id="s" placeholder="Begriff suchen …">
+<div class="terms" id="terms"></div>
+</section>
+
+<section id="zus">
+<h2>Zusammenhänge verstehen</h2>
+<p>Diese Zusammenhänge solltest du erklären können:</p>
+<h3>1. Wie entstand die Weimarer Republik?</h3>
+<div class="chain"><div><b>1</b>Erster Weltkrieg verloren</div><div><b>2</b>Novemberrevolution 1918</div><div><b>3</b>Kaiser dankt ab</div><div><b>4</b>Republik wird ausgerufen</div><div><b>5</b>Nationalversammlung und Verfassung 1919</div></div>
+<h3>2. Wie entstand die Hyperinflation 1923?</h3>
+<div class="chain"><div><b>1</b>Reparationsprobleme</div><div><b>2</b>Ruhrbesetzung durch Frankreich und Belgien</div><div><b>3</b>Passiver Widerstand</div><div><b>4</b>Staat bezahlt Streikende und druckt mehr Geld</div><div><b>5</b>Hyperinflation und Geldentwertung</div></div>
+<h3>3. Wie endete die Krise 1923?</h3>
+<div class="chain"><div><b>1</b>Stresemann wird Reichskanzler</div><div><b>2</b>Passiver Widerstand wird beendet</div><div><b>3</b>Einführung der Rentenmark</div><div><b>4</b>Stabilisierung der Wirtschaft</div></div>
+</section>
+
+<section id="quiz">
+<h2>Übungsfragen</h2>
+<p>Versuche, die Fragen ohne Lernzettel zu beantworten, und decke dann die Lösung auf.</p>
+<div id="pt"></div><div class="prog"><i id="pb"></i></div>
+<div id="qs"></div>
+<h2 style="margin-top:2rem">Tipps für deine Geschichtsarbeit</h2>
+<ol class="tips"><li>Die Ereignisse der Novemberrevolution und ihre Daten.</li><li>Den Unterschied zwischen parlamentarischer Demokratie und Räterepublik.</li><li>Die wichtigsten Inhalte der Weimarer Verfassung und Artikel 48.</li><li>Den Versailler Vertrag und seine Folgen.</li><li>Die Ursachen und Folgen der Ruhrbesetzung und Hyperinflation.</li><li>Den Ablauf des Hitlerputsches.</li><li>Die Maßnahmen von Gustav Stresemann zur Beendigung der Krise.</li></ol>
+<div class="box"><b>Ganz wichtig:</b> Lerne nicht nur die Daten auswendig, sondern verstehe vor allem die Ursachen und Folgen. In Geschichtsarbeiten wird häufig gefragt, warum etwas passiert ist und welche Auswirkungen es hatte.</div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const tabs=[["t1","Teil 1"],["t2","Teil 2: 1923"],["daten","Daten"],["begriffe","Begriffe"],["zus","Zusammenhänge"],["quiz","Übungsfragen"]];
+const nav=$("#nav");
+tabs.forEach(([id,l],i)=>{const b=document.createElement("button");b.textContent=l;b.onclick=()=>show(id);b.dataset.id=id;nav.append(b)});
+function show(id){$$("section").forEach(s=>s.classList.toggle("on",s.id===id));$$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.id===id));window.scrollTo({top:0,behavior:"smooth"})}
+show("t1");
+const D=[["3.11.1918","Matrosenaufstand in Kiel","18"],["9.11.1918","Ausrufung der Republik","18",1],["11.11.1918","Waffenstillstand","18"],["19.1.1919","Wahl zur Nationalversammlung","19"],["28.6.1919","Versailler Vertrag","19",1],["11.8.1919","Weimarer Verfassung","19",1],["Januar 1923","Ruhrbesetzung","23"],["1923","Hyperinflation","23"],["September 1923","Ende des passiven Widerstands","23"],["8./9.11.1923","Hitlerputsch","23",1],["15.11.1923","Einführung der Rentenmark","23",1]];
+function tl(f){$("#tl").innerHTML=D.filter(d=>f==="all"||d[2]===f).map(d=>`<div class="ev${d[3]?" k":""}"><b>${d[0]}</b>${d[1]}</div>`).join("")}
+tl("all");
+$("#df").onclick=e=>{const f=e.target.dataset.f;if(!f)return;$$("#df button").forEach(b=>b.classList.toggle("on",b===e.target));tl(f)};
+const T=[["Republik","Staatsform ohne Monarchen"],["Demokratie","Herrschaft des Volkes durch Wahlen und Mitbestimmung"],["Revolution","Grundlegende und schnelle Veränderung der politischen Ordnung"],["Räterepublik","Politisches System, in dem Arbeiter- und Soldatenräte die Macht haben"],["Abdankung","Rücktritt eines Herrschers"],["Versailler Vertrag","Friedensvertrag von 1919 nach dem Ersten Weltkrieg"],["Dolchstoßlegende","Falsche Behauptung, Deutschland sei von innen verraten worden"],["Reparationszahlungen","Entschädigungszahlungen für Kriegsschäden"],["Inflation","Allgemeiner Anstieg der Preise"],["Hyperinflation","Extrem schnelle und starke Geldentwertung"],["Passiver Widerstand","Widerstand durch Nichtzusammenarbeit und Streiks"],["Putsch","Versuch, die Regierung gewaltsam zu stürzen"],["Rentenmark","Neue Währung zur Stabilisierung der deutschen Wirtschaft 1923"]];
+function terms(q=""){$("#terms").innerHTML=T.filter(t=>(t[0]+t[1]).toLowerCase().includes(q.toLowerCase())).map(t=>`<div class="term" onclick="this.classList.toggle('o')"><strong>${t[0]}</strong><span>${t[1]}</span></div>`).join("")||"<p>Nichts gefunden.</p>"}
+terms();$("#s").oninput=e=>terms(e.target.value);
+const Q=[["Warum begann die Novemberrevolution 1918?","Deutschland hatte den Krieg praktisch verloren. Die Marine sollte trotzdem zu einem letzten Kampf gegen Großbritannien auslaufen, die Matrosen weigerten sich. Am 3. November 1918 kam es in Kiel zum Aufstand, der sich auf viele Städte ausbreitete. Dazu kamen Hunger, Kriegsmüdigkeit und der Wunsch nach Demokratie."],
+["Was passierte am 9. November 1918?","Kaiser Wilhelm II. dankte ab. Philipp Scheidemann (SPD) rief die Republik aus, Karl Liebknecht (Spartakusbund) eine sozialistische Republik. Am 11. November folgte der Waffenstillstand."],
+["Was war der Unterschied zwischen Scheidemann und Liebknecht?","Scheidemann wollte eine parlamentarische Demokratie mit freien Wahlen. Liebknecht wollte eine sozialistische Räterepublik, in der Arbeiter- und Soldatenräte die Macht übernehmen."],
+["Was waren die wichtigsten Folgen des Versailler Vertrags?","Deutschland musste die alleinige Kriegsschuld (Artikel 231) anerkennen, hohe Reparationen zahlen, Gebiete abgeben, das Heer auf 100.000 Soldaten verkleinern und auf Luftstreitkräfte und U-Boote verzichten. Viele Deutsche empfanden das als ungerecht und machten die Demokratie dafür verantwortlich."],
+["Warum wurde das Ruhrgebiet 1923 besetzt?","Deutschland lieferte Reparationen (u. a. Kohle und Holz) nicht wie vereinbart. Deshalb besetzten Frankreich und Belgien im Januar 1923 das Ruhrgebiet."],
+["Was versteht man unter passivem Widerstand?","Widerstand ohne Gewalt durch Nichtzusammenarbeit: Arbeiter streikten, Betriebe standen still und die Bevölkerung arbeitete nicht mit den Besatzern zusammen."],
+["Wie entstand die Hyperinflation 1923?","Kriegsschulden und Reparationen schwächten den Staat. Durch den passiven Widerstand fehlten Einnahmen, der Staat bezahlte aber die Streikenden und druckte immer mehr Geld. Die Mark verlor dadurch rasant an Wert."],
+["Was geschah beim Hitlerputsch?","Hitler und seine Anhänger versuchten am 8./9. November 1923, die Regierung gewaltsam zu stürzen. Der Versuch scheiterte, die Polizei stoppte den Marsch durch München. Hitler wurde verhaftet und verurteilt."],
+["Wie wurde die Krise 1923 beendet?","Stresemann beendete den passiven Widerstand und die Rentenmark wurde am 15. November 1923 eingeführt. Sie stabilisierte die Währung und stoppte die Hyperinflation."]];
+let known=new Set();
+$("#qs").innerHTML=Q.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p><button data-s="${i}">Lösung anzeigen</button><button class="g" data-g="${i}">Gewusst ✓</button><div class="ans" id="a${i}">${q[1]}</div></div>`).join("");
+function prog(){$("#pt").textContent=`Gewusst: ${known.size} von ${Q.length}`;$("#pb").style.width=known.size/Q.length*100+"%"}prog();
+$("#qs").onclick=e=>{const b=e.target;if(b.dataset.s!==undefined){const a=$("#a"+b.dataset.s);a.classList.toggle("o");b.textContent=a.classList.contains("o")?"Lösung verbergen":"Lösung anzeigen"}
+if(b.dataset.g!==undefined){const i=+b.dataset.g;known.has(i)?known.delete(i):known.add(i);b.classList.toggle("on");prog()}};
+$("#th").onclick=()=>{const r=document.documentElement,d=matchMedia("(prefers-color-scheme:dark)").matches,cur=r.dataset.theme||(d?"dark":"light");r.dataset.theme=cur==="dark"?"light":"dark"};
+</script>
+</body>
+</html>
