@@ -61,6 +61,20 @@
     flex-direction: column;
   }
 
+  /* Custom cursor (hidden by default; shown only on fine pointer devices) */
+  #cursor,
+  #cursor-ring {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    opacity: 0;
+    will-change: transform, width, height, opacity;
+  }
+
   /* Subtle monochrome ambient lights */
   .ambient-layer {
     position: fixed;
@@ -731,8 +745,49 @@
     color: var(--text-muted);
   }
 
-  /* Hover effects strictly scoped to true pointer devices */
+  /* Hover & custom cursor strictly scoped to true pointer devices */
   @media (hover: hover) and (pointer: fine) {
+    body,
+    a,
+    button {
+      cursor: none !important;
+    }
+
+    #cursor {
+      display: block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      z-index: 9999;
+      transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+      transition: width 0.22s var(--ease), height 0.22s var(--ease), opacity 0.2s var(--ease);
+    }
+
+    #cursor-ring {
+      display: block;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--accent);
+      z-index: 9998;
+      transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+      transition: width 0.3s var(--ease), height 0.3s var(--ease), opacity 0.25s var(--ease);
+    }
+
+    #cursor.is-visible,
+    #cursor-ring.is-visible {
+      opacity: 1;
+    }
+
+    #cursor.is-hover {
+      width: 20px;
+      height: 20px;
+    }
+
+    #cursor-ring.is-hover {
+      width: 60px;
+      height: 60px;
+    }
+
     .brand:hover {
       opacity: 0.85;
     }
@@ -894,6 +949,8 @@
       color: #000000 !important;
     }
 
+    #cursor,
+    #cursor-ring,
     .ambient-layer,
     .topbar,
     .btn,
@@ -932,6 +989,9 @@
 </style>
 </head>
 <body id="top">
+
+<div id="cursor" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
 
 <div class="ambient-layer" aria-hidden="true">
   <div class="ambient-orb ambient-orb--primary"></div>
@@ -1315,6 +1375,7 @@
       }
     } finally {
       reloadBtn.disabled = false;
+      syncCursorHover();
     }
   }
 
@@ -1338,6 +1399,80 @@
         card.style.setProperty("--my", "50%");
       });
     });
+  }
+
+  // Custom cursor (only on fine-pointer devices)
+  const cursor = document.getElementById("cursor");
+  const ring = document.getElementById("cursor-ring");
+  const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  let cursorActive = false;
+  let rafId = null;
+
+  function setCursorHover(isHovering) {
+    cursor.classList.toggle("is-hover", isHovering);
+    ring.classList.toggle("is-hover", isHovering);
+  }
+
+  function syncCursorHover() {
+    if (!cursorActive || !finePointerQuery.matches) return;
+    const el = document.elementFromPoint(mx, my);
+    setCursorHover(Boolean(el && el.closest("a, button:not(:disabled)")));
+  }
+
+  function renderCursorFrame() {
+    if (!cursorActive) {
+      rafId = null;
+      return;
+    }
+
+    if (reducedMotionQuery.matches) {
+      rx = mx;
+      ry = my;
+    } else {
+      rx += (mx - rx) * 0.14;
+      ry += (my - ry) * 0.14;
+    }
+
+    cursor.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+    ring.style.transform = `translate3d(${rx.toFixed(2)}px, ${ry.toFixed(2)}px, 0) translate(-50%, -50%)`;
+
+    rafId = requestAnimationFrame(renderCursorFrame);
+  }
+
+  if (finePointerQuery.matches) {
+    document.addEventListener("mousemove", e => {
+      mx = e.clientX;
+      my = e.clientY;
+
+      if (!cursorActive) {
+        rx = mx;
+        ry = my;
+        cursorActive = true;
+        cursor.classList.add("is-visible");
+        ring.classList.add("is-visible");
+      }
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(renderCursorFrame);
+      }
+    });
+
+    document.addEventListener("mouseover", e => {
+      if (!cursorActive) return;
+      setCursorHover(Boolean(e.target.closest("a, button:not(:disabled)")));
+    });
+
+    const hideCursor = () => {
+      cursorActive = false;
+      cursor.classList.remove("is-visible", "is-hover");
+      ring.classList.remove("is-visible", "is-hover");
+    };
+
+    document.documentElement.addEventListener("mouseleave", hideCursor);
+    window.addEventListener("blur", hideCursor);
   }
 
   // Active nav indicator
