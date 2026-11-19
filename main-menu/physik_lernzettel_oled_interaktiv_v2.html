@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>MECHANIK — Physik-Lernzettel</title>
+<style>
+  :root {
+    --bg: #000000;
+    --panel: #050505;
+    --panel-2: #090909;
+    --line: #252525;
+    --line-strong: #5a5a5a;
+    --text: #f5f5f5;
+    --muted: #b0b0b0;
+    --soft: #777777;
+    --white: #ffffff;
+    --black: #000000;
+    --max: 1160px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: .005em;
+  }
+  a { color: inherit; }
+  .page { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    border-bottom: 1px solid var(--line);
+    background: rgba(0,0,0,.96);
+    backdrop-filter: blur(12px);
+  }
+  .topbar-inner {
+    width: min(var(--max), calc(100% - 40px)); margin: 0 auto;
+    min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+  .brand { font-size: 12px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
+  .toplinks { display: flex; gap: 18px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+  .toplinks::-webkit-scrollbar { display: none; }
+  .toplinks a { color: var(--muted); font-size: 12px; text-decoration: none; }
+  .toplinks a:hover, .toplinks a:focus-visible { color: var(--white); text-decoration: underline; text-underline-offset: 4px; }
+  header.hero { padding: 76px 0 54px; border-bottom: 1px solid var(--line); }
+  .eyebrow { color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .22em; }
+  h1 { margin: 12px 0 12px; font-size: clamp(38px, 7vw, 76px); line-height: .98; letter-spacing: -.065em; font-weight: 850; }
+  .hero p { max-width: 720px; margin: 18px 0 0; color: var(--muted); font-size: 17px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .tag { border: 1px solid var(--line-strong); padding: 5px 9px; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  main { padding: 40px 0 90px; }
+  section { padding: 42px 0; border-bottom: 1px solid var(--line); }
+  .section-head { display: grid; grid-template-columns: 70px 1fr; gap: 16px; margin-bottom: 24px; align-items: start; }
+  .section-no { color: var(--soft); font-size: 12px; font-weight: 800; letter-spacing: .14em; padding-top: 8px; }
+  h2 { margin: 0; font-size: clamp(26px, 4vw, 42px); line-height: 1.08; letter-spacing: -.045em; }
+  .section-intro { margin: 9px 0 0; color: var(--muted); max-width: 760px; }
+  h3 { margin: 0 0 10px; font-size: 17px; letter-spacing: -.02em; }
+  h4 { margin: 0 0 7px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; }
+  p { margin: 8px 0 14px; }
+  .muted { color: var(--muted); }
+  .small { color: var(--muted); font-size: 13px; }
+  .grid { display: grid; gap: 14px; }
+  .grid.two { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .grid.three { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .panel { background: var(--panel); border: 1px solid var(--line); padding: 20px; min-width: 0; }
+  .panel.soft { background: var(--panel-2); }
+  .formula {
+    display: inline-block; margin: 6px 0 9px; padding: 7px 11px;
+    background: var(--white); color: var(--black); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 800; font-size: clamp(16px, 2vw, 21px); letter-spacing: -.04em;
+  }
+  .formula.block { display: block; width: fit-content; max-width: 100%; }
+  .formula.small-formula { font-size: 15px; }
+  .formula-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .formula-item { background: var(--panel); border: 1px solid var(--line); padding: 13px 15px; }
+  .formula-item strong { display:block; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.12em; margin-bottom:4px; }
+  .formula-item code { font-size: 16px; color: var(--white); font-weight: 750; white-space: normal; }
+  .note { border-left: 2px solid var(--white); padding: 10px 14px; background: var(--panel); color: var(--muted); margin: 16px 0; }
+  .warning { border: 1px solid var(--line-strong); padding: 14px 16px; background: var(--panel-2); margin: 16px 0; }
+  .warning strong { color: var(--white); }
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 12px 0 0; }
+  .steps li { counter-increment: step; position: relative; padding: 0 0 14px 39px; color: var(--muted); }
+  .steps li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 1px; color: var(--white); font: 700 11px ui-monospace, monospace; }
+  .diagram { border: 1px solid var(--line); background: #000000; padding: 12px; margin: 16px 0; overflow: hidden; }
+  .diagram svg { display: block; width: 100%; height: auto; max-height: 390px; }
+  .diagram figcaption { margin: 9px 4px 2px; color: var(--muted); font-size: 12px; }
+  svg text { fill: #f4f4f4; font-family: ui-sans-serif, system-ui, sans-serif; }
+  svg .dim { fill: #aaaaaa; }
+  svg .line { stroke: #f4f4f4; stroke-width: 2.4; fill: none; }
+  svg .thin { stroke: #888888; stroke-width: 1.5; fill: none; }
+  svg .dash { stroke: #888888; stroke-width: 1.5; stroke-dasharray: 6 5; fill: none; }
+  svg .force { stroke: #ffffff; stroke-width: 3.2; fill: none; }
+  svg .force2 { stroke: #bdbdbd; stroke-width: 2.7; fill: none; }
+  svg .shape { fill: #202020; stroke: #eeeeee; stroke-width: 2; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th, td { padding: 11px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--white); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+  td { color: var(--muted); }
+  td strong { color: var(--white); }
+  .example { margin-top: 16px; border: 1px solid var(--line-strong); padding: 18px; background: #000000; }
+  .example-label { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+  .result { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; color: var(--white); font-weight: 750; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .mini-list { margin: 8px 0 0; padding-left: 18px; color: var(--muted); }
+  .mini-list li { padding: 3px 0; }
+  details { border: 1px solid var(--line); background: var(--panel); margin: 10px 0; }
+  summary { cursor: pointer; padding: 13px 15px; font-weight: 700; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; float: right; color: var(--muted); font: 700 18px ui-monospace, monospace; }
+  details[open] summary::after { content: "−"; }
+  .details-body { padding: 0 15px 15px; color: var(--muted); }
+  .footer { padding: 30px 0 50px; color: var(--soft); font-size: 12px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .back { color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--white); text-decoration: underline; }
+  @media (max-width: 760px) {
+    .page, .topbar-inner { width: min(100% - 28px, var(--max)); }
+    .toplinks { gap: 13px; }
+    .toplinks a { font-size: 11px; }
+    header.hero { padding: 55px 0 38px; }
+    .section-head { grid-template-columns: 42px 1fr; gap: 10px; }
+    .grid.two, .grid.three, .two-col { grid-template-columns: 1fr; }
+    .formula-list { grid-template-columns: 1fr; }
+    section { padding: 32px 0; }
+    .panel { padding: 16px; }
+    table { font-size: 12px; }
+    th, td { padding: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media print {
+    :root { --bg:#ffffff; --panel:#f5f5f5; --panel-2:#eeeeee; --line:#bbbbbb; --line-strong:#777777; --text:#111111; --muted:#333333; --soft:#555555; --white:#000000; --black:#ffffff; }
+    body { background:#fff; color:#111; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .topbar { position: static; background:#fff; }
+    .toplinks { display:none; }
+    .page, .topbar-inner { width:100%; }
+    section { break-inside: avoid; }
+    .panel, .diagram, .example, details { break-inside: avoid; }
+    .formula { border:1px solid #111; }
+    .diagram { background:#fff; }
+    svg text { fill:#111; }
+    svg .line, svg .force { stroke:#111; }
+    svg .thin, svg .dash, svg .force2 { stroke:#555; }
+    svg .shape { fill:#eee; stroke:#111; }
+    .footer { color:#333; }
+  }
+
+  /* OLED BLACK / INTERACTION LAYER */
+  :root { color-scheme: dark; }
+  body, .topbar, .diagram, .example { background-color: #000000; }
+  .panel, .formula-item, details, .note { background-color: #030303; }
+  .panel.soft, .warning, th { background-color: #080808; }
+  .topbar { border-bottom-color: #242424; }
+  .topbar-inner { min-height: 62px; }
+  .reading-progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 30; background: #191919; }
+  .reading-progress span { display:block; width:0; height:100%; background:#fff; transition:width .12s linear; }
+  .interaction-bar { display:grid; grid-template-columns:minmax(220px,1.4fr) auto auto auto minmax(130px,.8fr); gap:10px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .control, .interaction-bar input, .interaction-bar button, .calc-card input, .calc-card select, .quiz-actions button {
+    min-height:42px; border:1px solid #444; border-radius:0; background:#000; color:#fff; font:inherit; padding:9px 12px;
+  }
+  .interaction-bar input { width:100%; min-width:0; }
+  .interaction-bar input::placeholder { color:#777; }
+  button, select, input { accent-color:#fff; }
+  button { cursor:pointer; }
+  button:hover, .control:hover, .interaction-bar input:focus, .calc-card input:focus, .calc-card select:focus { border-color:#fff; outline:none; }
+  button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+  .control { white-space:nowrap; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+  .control.primary { background:#fff; color:#000; border-color:#fff; font-weight:800; }
+  .control.primary:hover { background:#dcdcdc; }
+  .statusline { color:#999; font:11px ui-monospace, SFMono-Regular, Menlo, monospace; text-align:right; white-space:nowrap; }
+  section.search-hidden { display:none; }
+  .chapter-tools { display:flex; justify-content:flex-end; margin:-10px 0 18px; }
+  .chapter-done { border:1px solid #444; background:#000; color:#aaa; padding:7px 10px; border-radius:0; font-size:10px; font-weight:750; text-transform:uppercase; letter-spacing:.1em; }
+  .chapter-done[aria-pressed="true"] { color:#000; background:#fff; border-color:#fff; }
+  .chapter-done[aria-pressed="true"]::before { content:"✓  "; }
+  .formulas-hidden .formula, .formulas-hidden .formula-item code { color:transparent !important; text-shadow:0 0 8px #fff; user-select:none; }
+  .formulas-hidden .formula { background:#000; border:1px solid #555; }
+  .calc-card { border:1px solid #555; background:#000; padding:20px; margin:24px 0 0; }
+  .calc-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:14px; }
+  .calc-head p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+  .calc-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  .calc-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .calc-field label { color:#aaa; font-size:11px; text-transform:uppercase; letter-spacing:.1em; }
+  .calc-field input, .calc-card select { width:100%; min-width:0; }
+  .calc-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+  .calc-result { display:none; border-top:1px solid #333; margin-top:16px; padding-top:14px; }
+  .calc-result.visible { display:block; }
+  .calc-result strong { display:block; color:#fff; font-size:clamp(21px,3vw,30px); letter-spacing:-.04em; }
+  .calc-result p { color:#aaa; margin:5px 0 0; font:13px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .quiz-wrap { border:1px solid #555; background:#000; padding:20px; margin:12px 0 22px; }
+  .quiz-intro { color:#aaa; font-size:13px; margin:0 0 14px; }
+  .quiz-question { border-top:1px solid #292929; padding:15px 0; margin:0; }
+  .quiz-question:first-child { border-top:0; }
+  .quiz-question legend { color:#fff; font-weight:750; padding:0 0 9px; }
+  .quiz-option { display:flex; align-items:flex-start; gap:9px; padding:6px 9px; margin:3px 0; border:1px solid transparent; color:#bcbcbc; cursor:pointer; font-size:14px; }
+  .quiz-option:hover { border-color:#444; color:#fff; }
+  .quiz-option input { margin-top:5px; }
+  .quiz-option.correct { border-color:#fff; color:#fff; }
+  .quiz-option.incorrect { border-color:#666; color:#888; text-decoration:line-through; }
+  .quiz-feedback { color:#aaa; font-size:12px; margin:8px 0 0; min-height:18px; }
+  .quiz-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:12px; }
+  .quiz-actions button { font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .quiz-score { color:#fff; font:700 13px ui-monospace, monospace; margin-left:auto; }
+  .search-count { color:#aaa; font-size:11px; }
+  @media (max-width:760px) {
+    .interaction-bar { grid-template-columns:1fr 1fr; }
+    .interaction-bar input { grid-column:1 / -1; }
+    .statusline { text-align:left; }
+    .calc-grid { grid-template-columns:1fr; }
+    .chapter-tools { justify-content:flex-start; margin-top:-5px; }
+    .calc-card, .quiz-wrap { padding:15px; }
+  }
+  @media print {
+    .reading-progress, .interaction-bar, .chapter-tools, .calc-card, .quiz-wrap { display:none !important; }
+    .topbar { background:#fff; }
+  }
+
+
+  /* Interaktive monochrome Diagramme */
+  .viz-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:12px 0 20px; padding:16px; border:1px solid #424242; background:#020202; }
+  .viz-control { min-width:0; display:flex; flex-direction:column; gap:8px; }
+  .viz-control label { display:flex; align-items:center; justify-content:space-between; gap:10px; color:#aaa; font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; }
+  .viz-control output { color:#fff; font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace; white-space:nowrap; }
+  .viz-control input[type=range] { width:100%; cursor:pointer; accent-color:#fff; }
+  .viz-readout { grid-column:1/-1; margin:0; padding-top:10px; border-top:1px solid #292929; color:#fff; font:700 13px ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .viz-buttons { display:flex; flex-wrap:wrap; gap:8px; align-items:end; }
+  .viz-buttons button { height:40px; }
+  .pulley-controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .pulley-controls .viz-buttons { grid-column:1/-1; }
+  .pulley-controls .small { grid-column:1/-1; margin:0; }
+  .diagram svg .rope-highlight { stroke:#fff; stroke-width:3.5; fill:none; }
+  @media(max-width:760px) {
+    .viz-controls { grid-template-columns:1fr; padding:13px; gap:12px; }
+    .pulley-controls { grid-template-columns:1fr; }
+    .pulley-controls .viz-buttons, .viz-readout, .pulley-controls .small { grid-column:1; }
+  }
+  @media print { .viz-controls { display:none !important; } }
+
+</style>
+<style>
+/* ===== ENHANCED: OLED / reactive / animated ===== */
+:root{--acc:#9b8cff;--acc2:#6ee7ff;--r:16px}
+body{font-family:'Space Grotesk',Inter,ui-sans-serif,system-ui,sans-serif;overflow-x:hidden}
+.formula,.formula-item code,.viz-readout,.statusline,output,.calc-result p,.steps li::before{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.panel,.example,.diagram,.calc-card,.quiz-wrap,.formula-item,details,.note,.warning{border-radius:var(--r)}
+.note{border-left-width:3px;border-left-color:var(--acc)}
+.formula{border-radius:10px;transition:box-shadow .3s,transform .3s}
+.formula:hover{box-shadow:0 0 0 1px #fff,0 0 34px rgba(155,140,255,.45);transform:translateY(-1px)}
+.panel,.formula-item,.example,.calc-card,.quiz-wrap,details{background-image:radial-gradient(340px circle at var(--mx,-999px) var(--my,-999px),rgba(155,140,255,.11),transparent 70%);transition:border-color .3s,box-shadow .3s}
+.panel:hover,.formula-item:hover,.example:hover{border-color:#44405e;box-shadow:0 0 40px -18px var(--acc)}
+.interaction-bar input,.interaction-bar button,.control,.calc-card input,.calc-card select,.quiz-actions button,.chapter-done{border-radius:12px;transition:transform .15s,background .25s,border-color .25s,box-shadow .25s}
+button:active,.control:active{transform:scale(.95)}
+.control:hover{box-shadow:0 0 22px -6px var(--acc)}
+.interaction-bar input:focus,.calc-card input:focus{box-shadow:0 0 0 3px rgba(155,140,255,.25)}
+.reading-progress span{background:linear-gradient(90deg,var(--acc),var(--acc2),#fff);box-shadow:0 0 14px var(--acc)}
+.topbar{background:rgba(0,0,0,.72);backdrop-filter:blur(18px) saturate(1.4)}
+.toplinks{position:relative}
+.toplinks a{position:relative;padding:4px 0;text-decoration:none!important;transition:color .25s}
+.toplinks a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;border-radius:2px;background:var(--acc);box-shadow:0 0 10px var(--acc);transform:scaleX(0);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.toplinks a.on{color:#fff}.toplinks a.on::after{transform:scaleX(1)}
+/* hero */
+header.hero{position:relative;overflow:hidden;isolation:isolate}
+header.hero::before,header.hero::after{content:"";position:absolute;z-index:-1;width:520px;height:520px;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+header.hero::before{background:radial-gradient(circle,rgba(155,140,255,.55),transparent 65%);right:-120px;top:-180px;transform:translate(calc(var(--px,0)*40px),calc(var(--py,0)*40px));animation:drift 14s ease-in-out infinite alternate}
+header.hero::after{background:radial-gradient(circle,rgba(110,231,255,.3),transparent 65%);left:-200px;bottom:-300px;transform:translate(calc(var(--px,0)*-30px),calc(var(--py,0)*-30px));animation:drift 18s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{margin:30px 0 0 -40px}}
+h1 .ch{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*55ms + 150ms)}
+h1 .ch.dot{color:var(--acc);text-shadow:0 0 24px var(--acc);animation:rise .9s both,blink 2.4s 1.5s ease-in-out infinite;animation-delay:calc(var(--i)*55ms + 150ms),0s}
+@keyframes rise{from{opacity:0;transform:translateY(60%) rotate(4deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+@keyframes blink{50%{opacity:.35}}
+.hero .eyebrow,.hero p,.hero .tag{animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+.hero .eyebrow{animation-delay:.05s}.hero p{animation-delay:.6s}
+.hero .tag{animation-delay:calc(.8s + var(--t,0)*90ms);transition:border-color .25s,color .25s,transform .25s}
+.hero .tag:hover{border-color:var(--acc);color:#fff;transform:translateY(-2px)}
+/* scroll reveal */
+.rv{opacity:0;transform:translateY(24px) scale(.985);transition:opacity .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms),transform .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms)!important}
+.rv.in{opacity:1;transform:none}
+/* svg draw-in */
+svg.drawing .line,svg.drawing .force,svg.drawing .force2{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.diagram{position:relative;transition:border-color .3s}
+.diagram:hover{border-color:#3d3a55}
+svg{user-select:none;-webkit-user-select:none}
+svg .force{filter:drop-shadow(0 0 5px rgba(255,255,255,.35))}
+/* drag handles */
+.hd{cursor:grab;outline:none;touch-action:none}
+.hd.on,svg.dragging{cursor:grabbing}
+.hd .hit{fill:transparent}
+.hd .dot{fill:#fff;stroke:var(--acc);stroke-width:3;transition:r .2s;filter:drop-shadow(0 0 8px var(--acc))}
+.hd .ring{fill:rgba(155,140,255,.15);stroke:var(--acc);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ping 2.2s ease-out infinite}
+.hd:hover .dot,.hd.on .dot,.hd:focus-visible .dot{r:10}
+.hd.on .ring{animation:none;fill:rgba(155,140,255,.32);transform:scale(1.25)}
+.hd:focus-visible .ring{stroke-width:3}
+@keyframes ping{0%{transform:scale(.7);opacity:.95}100%{transform:scale(1.7);opacity:0}}
+@media(pointer:coarse){.hd .hit{r:46}}
+.hint{display:inline-flex;align-items:center;gap:7px;margin-right:10px;padding:3px 10px;border:1px solid #3d3a55;border-radius:99px;color:#cfc9ff;font-size:11px;background:rgba(155,140,255,.08);animation:hintp 2.4s ease-in-out infinite}
+@keyframes hintp{50%{box-shadow:0 0 18px -4px var(--acc)}}
+/* sliders become hidden (a11y-only); readouts stay */
+.viz-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:0;border:0;background:none;margin:2px 0 20px}
+.viz-control{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.viz-readout{flex:1 1 280px;margin:0;padding:13px 16px;border:1px solid #2c2a40;border-radius:12px;background:#030303;font-size:13px;color:#fff;grid-column:auto}
+.viz-readout.flash{animation:flash .5s}
+@keyframes flash{from{border-color:var(--acc);box-shadow:0 0 22px -6px var(--acc)}}
+.viz-controls .small{flex:1 1 100%;margin:0}
+.viz-buttons{order:-1}
+/* quiz / misc motion */
+.quiz-option{border-radius:10px;transition:all .2s}
+.quiz-option:has(input:checked){border-color:var(--acc);background:rgba(155,140,255,.1);color:#fff;transform:translateX(4px)}
+.quiz-option.correct{animation:pop .5s;background:rgba(110,231,183,.08);border-color:#6ee7b7}
+.quiz-option.incorrect{animation:shake .4s}
+@keyframes pop{40%{transform:scale(1.03)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.calc-result.visible{animation:pop .45s}
+.chapter-done[aria-pressed="true"]{animation:pop .45s;box-shadow:0 0 24px -4px var(--acc)}
+details[open] .details-body{animation:rise .4s both}
+details summary{transition:color .2s}details summary:hover{color:var(--acc)}
+section{transition:opacity .3s}
+@media(max-width:760px){.hd .dot{r:9}.hint{margin-bottom:6px}}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.rv{opacity:1;transform:none}}
+@media print{.rv{opacity:1!important;transform:none!important}.hd,.hint{display:none}header.hero::before,header.hero::after{display:none}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body id="top">
+<div class="reading-progress" aria-hidden="true"><span id="readingProgressBar"></span></div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Physik / Mechanik</div>
+    <nav class="toplinks" aria-label="Kapitel-Navigation">
+      <a href="#kraft">Kraft</a>
+      <a href="#parallelogramm">Kräfte</a>
+      <a href="#hooke">Hooke</a>
+      <a href="#flaschenzug">Flaschenzug</a>
+      <a href="#hebel">Hebel</a>
+      <a href="#ebene">Schiefe Ebene</a>
+      <a href="#arbeit">Arbeit</a>
+      <a href="#training">Üben</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+<header class="hero">
+  <div class="eyebrow">Lernzettel · Kräfte, Bewegung & Energie</div>
+  <h1>MECHANIK<span style="color:#777">.</span></h1>
+  <p>Die wichtigsten Zusammenhänge aus deinem Formelblatt – erklärt, grafisch dargestellt und mit Rechenbeispielen. Arbeite dich Kapitel für Kapitel durch und nutze am Ende die Lernkontrolle.</p>
+  <div class="hero-meta">
+    <span class="tag">Formeln verstehen</span>
+    <span class="tag">Einheiten sicher anwenden</span>
+    <span class="tag">Grafisch lösen</span>
+    <span class="tag">Mit Beispielen</span>
+  </div>
+</header>
+
+<div class="interaction-bar" role="toolbar" aria-label="Lernwerkzeuge">
+  <input id="chapterSearch" type="search" placeholder="Kapitel oder Begriff suchen …" aria-label="Lernzettel durchsuchen">
+  <button class="control" id="toggleDetails" type="button">Alle Lösungen öffnen</button>
+  <button class="control" id="toggleFormulas" type="button" aria-pressed="false">Formeln abdecken</button>
+  <div class="statusline" id="chapterStatus" aria-live="polite">0 / 11 Kapitel gelernt</div>
+  <div class="search-count" id="searchCount" aria-live="polite">Alle Kapitel sichtbar</div>
+</div>
+
+<main>
+<section id="ueberblick">
+  <div class="section-head">
+    <div class="section-no">00 / START</div>
+    <div><h2>Formel-Überblick</h2><p class="section-intro">Diese Formeln solltest du erkennen, benennen und nach jeder gesuchten Größe umstellen können.</p></div>
+  </div>
+  <div class="formula-list">
+    <div class="formula-item"><strong>Gewichtskraft</strong><code>F<sub>G</sub> = m · g</code></div>
+    <div class="formula-item"><strong>Newtons Grundgesetz</strong><code>F = m · a</code></div>
+    <div class="formula-item"><strong>Hookesches Gesetz</strong><code>F = D · s</code></div>
+    <div class="formula-item"><strong>Resultierende Kraft</strong><code>F<sub>res</sub> = F<sub>1</sub> + F<sub>2</sub></code> <span class="small">(vektoriell)</span></div>
+    <div class="formula-item"><strong>Flaschenzug</strong><code>F<sub>Zug</sub> = F<sub>Last</sub> / n</code></div>
+    <div class="formula-item"><strong>Hebelgleichgewicht</strong><code>F<sub>1</sub> · l<sub>1</sub> = F<sub>2</sub> · l<sub>2</sub></code></div>
+    <div class="formula-item"><strong>Schiefe Ebene</strong><code>F<sub>parallel</sub> = F<sub>G</sub> · sin(α)</code></div>
+    <div class="formula-item"><strong>Mechanische Arbeit</strong><code>W = F · s</code> <span class="small">(gleiche Richtung)</span></div>
+    <div class="formula-item"><strong>Leistung</strong><code>P = W / t</code></div>
+  </div>
+  <div class="note"><strong>Einheiten-Merker:</strong> Kraft in Newton (N), Masse in Kilogramm (kg), Strecke in Meter (m), Arbeit/Energie in Joule (J), Leistung in Watt (W). Einheiten vor dem Einsetzen passend umrechnen.</div>
+  <div class="calc-card" id="formelrechner">
+    <div class="calc-head">
+      <div><h3>Interaktiver Formel-Rechner</h3><p>Formel auswählen, Werte einsetzen und das Ergebnis samt Rechenweg anzeigen.</p></div>
+      <span class="tag">Live · lokal</span>
+    </div>
+    <div class="calc-field" style="max-width:360px;margin-bottom:14px">
+      <label for="calcType">Thema / gesuchte Größe</label>
+      <select id="calcType">
+        <option value="weight">Gewichtskraft Fg = m · g</option>
+        <option value="hooke">Federkraft F = D · s</option>
+        <option value="pulley">Flaschenzug Fzug = Flast / n</option>
+        <option value="lever">Hebel F1 = (F2 · l2) / l1</option>
+        <option value="plane">Schiefe Ebene Fparallel = Fg · sin(α)</option>
+        <option value="work">Mechanische Arbeit W = F · s · cos(α)</option>
+        <option value="lifting">Hubarbeit W = m · g · h</option>
+        <option value="power">Leistung P = W / t</option>
+      </select>
+    </div>
+    <div class="calc-grid" id="calcFields"></div>
+    <div class="calc-actions"><button class="control primary" id="calculateBtn" type="button">Berechnen</button><button class="control" id="resetCalc" type="button">Beispielwerte laden</button></div>
+    <div class="calc-result" id="calcResult" aria-live="polite"><strong id="calcValue"></strong><p id="calcSteps"></p></div>
+  </div>
+</section>
+
+<section id="kraft">
+  <div class="section-head">
+    <div class="section-no">01 / KRAFT</div>
+    <div><h2>Kraft</h2><p class="section-intro">Eine Kraft kann einen Körper beschleunigen, abbremsen, seine Richtung ändern oder ihn verformen. Kräfte sind gerichtete Größen: Sie haben einen Betrag und eine Richtung.</p></div>
+  </div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Newtons Grundgesetz</h3>
+      <div class="formula">F = m · a</div>
+      <p>Die resultierende Kraft auf einen Körper ist Masse mal Beschleunigung. Je größer die Masse, desto mehr Kraft ist für dieselbe Beschleunigung nötig.</p>
+      <table>
+        <tr><th>Zeichen</th><th>Bedeutung</th><th>Einheit</th></tr>
+        <tr><td><strong>F</strong></td><td>Kraft</td><td>N</td></tr>
+        <tr><td><strong>m</strong></td><td>Masse</td><td>kg</td></tr>
+        <tr><td><strong>a</strong></td><td>Beschleunigung</td><td>m/s²</td></tr>
+      </table>
+      <div class="small">1 N = 1 kg · m/s²</div>
+    </div>
+    <div class="panel">
+      <h3>Gewichtskraft</h3>
+      <div class="formula">F<sub>G</sub> = m · g</div>
+      <p>Die Gewichtskraft ist die Kraft, mit der ein Himmelskörper einen Gegenstand anzieht. Auf der Erde gilt näherungsweise <strong>g = 9,81 N/kg</strong> (in Schulaufgaben oft 10 N/kg).</p>
+      <div class="warning"><strong>Wichtig zu deinem Formelblatt:</strong> Dort steht „Kraft: F = m · g“. Diese Formel beschreibt speziell die <strong>Gewichtskraft</strong>. Für eine beliebige Beschleunigung gilt allgemein F = m · a.</div>
+    </div>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel · Gewichtskraft</div>
+    <p><strong>Gegeben:</strong> m = 6 kg, g = 9,81 N/kg</p>
+    <p><strong>Gesucht:</strong> Gewichtskraft F<sub>G</sub></p>
+    <p><strong>Einsetzen:</strong> F<sub>G</sub> = 6 kg · 9,81 N/kg</p>
+    <div class="result">F<sub>G</sub> = 58,86 N ≈ 58,9 N</div>
+  </div>
+  <div class="grid three" style="margin-top:14px">
+    <div class="panel soft"><h4>Gravitationskraft</h4><p class="small">Zieht Massen an, zum Beispiel die Erde einen fallenden Ball.</p></div>
+    <div class="panel soft"><h4>Reibungskraft</h4><p class="small">Wirkt der Relativbewegung oder der drohenden Bewegung entgegen.</p></div>
+    <div class="panel soft"><h4>Federkraft</h4><p class="small">Entsteht beim Dehnen oder Zusammendrücken einer Feder.</p></div>
+  </div>
+  <p class="muted">Weitere typische Kräfte: Normalkraft (Unterstützung durch eine Fläche), Seilkraft/Zugkraft (entlang eines Seils) und Muskelkraft.</p>
+</section>
+
+<section id="parallelogramm">
+  <div class="section-head">
+    <div class="section-no">02 / VEKTOR</div>
+    <div><h2>Kräfteparallelogramm</h2><p class="section-intro">Wirken zwei Kräfte gleichzeitig an einem Punkt, können sie durch eine einzige Kraft ersetzt werden: die resultierende Kraft F<sub>res</sub>.</p></div>
+  </div>
+  <figure class="diagram">
+    <svg id="forceDiagram" viewBox="0 0 720 350" role="img" aria-label="Interaktives Kräfteparallelogramm; zwei Kraftpfeile und Resultierende">
+  <defs>
+    <marker id="arrp" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#fff"/></marker>
+    <marker id="arrpg" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#aaa"/></marker>
+  </defs>
+  <line x1="90" y1="290" x2="650" y2="290" class="thin"/>
+  <line id="forceParaA" x1="270" y1="290" x2="400" y2="150" class="dash"/>
+  <line id="forceParaB" x1="400" y1="150" x2="530" y2="150" class="dash"/>
+  <line id="forceVector1" x1="270" y1="290" x2="420" y2="290" class="force" marker-end="url(#arrp)"/>
+  <line id="forceVector2" x1="270" y1="290" x2="335" y2="177" class="force2" marker-end="url(#arrpg)"/>
+  <line id="forceResult" x1="270" y1="290" x2="485" y2="150" class="force" marker-end="url(#arrp)"/>
+  <circle cx="270" cy="290" r="5" fill="#fff"/>
+  <text x="245" y="320" font-size="14">Angriffspunkt</text>
+  <text id="forceLabel1" x="405" y="320" font-size="17">F₁</text>
+  <text id="forceLabel2" x="330" y="165" font-size="17">F₂</text>
+  <text id="forceLabelRes" x="490" y="135" font-size="18" font-weight="700">F_res</text>
+  <text x="95" y="40" font-size="13" class="dim">Regler verändern Länge und Winkel der Kräfte.</text>
+</svg>
+    <figcaption>Die beiden Kräfte beginnen am selben Punkt. Durch die Spitzen werden jeweils Parallelen zur anderen Kraft gedacht. Die Diagonale vom Startpunkt ist F<sub>res</sub>.</figcaption>
+  </figure>
+<div class="viz-controls" aria-label="Kräfteparallelogramm einstellen">
+  <div class="viz-control"><label for="forceF1">Kraft F₁ <output id="forceF1Out">6 N</output></label><input id="forceF1" type="range" min="1" max="10" step="0.5" value="6"></div>
+  <div class="viz-control"><label for="forceF2">Kraft F₂ <output id="forceF2Out">5 N</output></label><input id="forceF2" type="range" min="1" max="10" step="0.5" value="5"></div>
+  <div class="viz-control"><label for="forceAngle">Winkel α <output id="forceAngleOut">60°</output></label><input id="forceAngle" type="range" min="0" max="180" step="5" value="60"></div>
+  <p class="viz-readout" id="forceReadout" aria-live="polite">Resultierende: 9,5 N</p>
+</div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Grafische Konstruktion</h3>
+      <ol class="steps">
+        <li>Beide Kraftpfeile maßstäblich vom selben Angriffspunkt aus einzeichnen.</li>
+        <li>Durch die Spitze von F<sub>1</sub> eine Parallele zu F<sub>2</sub> zeichnen.</li>
+        <li>Durch die Spitze von F<sub>2</sub> eine Parallele zu F<sub>1</sub> zeichnen.</li>
+        <li>Die Diagonale vom Angriffspunkt zur gegenüberliegenden Ecke ist F<sub>res</sub>.</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Rechnerisch</h3>
+      <p>Bei einem Winkel α zwischen den Kräften gilt:</p>
+      <div class="formula block">F<sub>res</sub> = √(F<sub>1</sub>² + F<sub>2</sub>² + 2 · F<sub>1</sub> · F<sub>2</sub> · cos α)</div>
+      <p class="small">Stehen die Kräfte senkrecht aufeinander (α = 90°), vereinfacht sich das zu:</p>
+      <div class="formula">F<sub>res</sub> = √(F<sub>1</sub>² + F<sub>2</sub>²)</div>
+    </div>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel · rechtwinklige Kräfte</div>
+    <p><strong>Gegeben:</strong> F<sub>1</sub> = 3 N, F<sub>2</sub> = 4 N, Winkel = 90°</p>
+    <p>F<sub>res</sub> = √(3² + 4²) N = √25 N</p>
+    <div class="result">F<sub>res</sub> = 5 N</div>
+  </div>
+  <div class="note">Gegenüberliegende Kräfte auf einer Geraden werden ebenfalls vektoriell addiert: Haben sie entgegengesetzte Richtungen, werden ihre Beträge voneinander abgezogen. Die Richtung der größeren Kraft bleibt übrig.</div>
+</section>
+
+<section id="hooke">
+  <div class="section-head">
+    <div class="section-no">03 / FEDER</div>
+    <div><h2>Hookesches Gesetz</h2><p class="section-intro">Bei einer idealen Feder ist die Verlängerung proportional zur wirkenden Kraft – solange die Feder im elastischen Bereich bleibt.</p></div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="formula">F = D · s</div>
+      <p><strong>D</strong> ist die Federkonstante (Federhärte). <strong>s</strong> ist die Verlängerung oder Stauchung gegenüber der unbelasteten Länge – nicht die gesamte Federlänge.</p>
+      <table>
+        <tr><th>Größe</th><th>Einheit</th></tr>
+        <tr><td>Kraft F</td><td>N</td></tr>
+        <tr><td>Federkonstante D</td><td>N/m oder N/cm</td></tr>
+        <tr><td>Verformung s</td><td>m oder cm – passend zu D</td></tr>
+      </table>
+      <div class="note">Auf deinem Formelblatt steht D = F : s. Das ist dieselbe Beziehung umgestellt: <strong>D = F/s</strong>. Außerdem gilt s = F/D.</div>
+    </div>
+    <figure class="diagram" style="margin:0">
+      <svg id="hookeGraph" viewBox="0 0 500 300" role="img" aria-label="Interaktives Kraft-Verlängerungs-Diagramm einer Feder">
+  <defs><marker id="hookarr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#fff"/></marker></defs>
+  <line x1="72" y1="245" x2="440" y2="245" class="line" marker-end="url(#hookarr)"/>
+  <line x1="72" y1="245" x2="72" y2="35" class="line" marker-end="url(#hookarr)"/>
+  <line id="hookeLine" x1="72" y1="245" x2="276" y2="150" class="force"/>
+  <line id="hookeProjX" x1="276" y1="150" x2="276" y2="245" class="dash"/>
+  <line id="hookeProjY" x1="72" y1="150" x2="276" y2="150" class="dash"/>
+  <circle id="hookePoint" cx="276" cy="150" r="5" fill="#fff"/>
+  <text x="445" y="265" font-size="16">s</text>
+  <text x="46" y="28" font-size="16">F</text>
+  <text id="hookePointLabel" x="286" y="140" font-size="14">F = 6 N</text>
+  <text x="203" y="286" font-size="13" class="dim">Verlängerung</text>
+  <text x="82" y="260" font-size="12" class="dim">0</text>
+  <text id="hookeSLabel" x="286" y="260" font-size="12" class="dim">s = 3 cm</text>
+  <text x="205" y="115" font-size="14">Steigung = D</text>
+</svg>
+      <figcaption>Im F-s-Diagramm ist die Steigung der Geraden die Federkonstante D. Eine steilere Gerade bedeutet: Die Feder ist härter.</figcaption>
+    </figure>
+<div class="viz-controls" aria-label="Federdiagramm einstellen">
+  <div class="viz-control"><label for="hookeD">Federkonstante D <output id="hookeDOut">2 N/cm</output></label><input id="hookeD" type="range" min="0.5" max="5" step="0.5" value="2"></div>
+  <div class="viz-control"><label for="hookeS">Verlängerung s <output id="hookeSOut">3 cm</output></label><input id="hookeS" type="range" min="0" max="10" step="0.5" value="3"></div>
+  <p class="viz-readout" id="hookeReadout" aria-live="polite">Federkraft: F = 6 N</p>
+</div>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel</div>
+    <p><strong>Gegeben:</strong> D = 2 N/cm, s = 3 cm</p>
+    <p>F = D · s = 2 N/cm · 3 cm</p>
+    <div class="result">F = 6 N</div>
+  </div>
+  <div class="warning"><strong>Gültigkeitsbereich:</strong> Wird eine Feder zu stark gedehnt oder gestaucht, ist die Beziehung möglicherweise nicht mehr linear. Wird die Elastizitätsgrenze überschritten, kehrt sie nicht unbedingt in ihre ursprüngliche Form zurück.</div>
+</section>
+
+<section id="flaschenzug">
+  <div class="section-head">
+    <div class="section-no">04 / SEILZUG</div>
+    <div><h2>Flaschenzug</h2><p class="section-intro">Ein Flaschenzug verringert die nötige Zugkraft. Dafür muss man mehr Seil ziehen. Im Idealfall bleibt die verrichtete Arbeit gleich.</p></div>
+  </div>
+  <figure class="diagram">
+    <svg id="pulleyDiagram" viewBox="0 0 720 465" role="img" aria-label="Interaktiver idealer Flaschenzug mit zwei parallelen tragenden Seilstücken: Seilanker, lose Rolle, feste Umlenkrolle und Zugende">
+  <defs>
+    <marker id="pulleyArrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#fff"/></marker>
+    <marker id="pulleyArrowGray" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#aaa"/></marker>
+  </defs>
+  <line x1="205" y1="42" x2="610" y2="42" class="line"/>
+  <circle cx="368" cy="42" r="4" fill="#fff"/>
+  <line x1="500" y1="42" x2="500" y2="76" class="line"/>
+  <text x="255" y="73" font-size="14">Seilende fest verankert</text>
+  <text x="525" y="68" font-size="14">feste Aufhängung</text>
+  <!-- Rollen -->
+  <circle id="pulleyFixedWheel" cx="500" cy="120" r="44" class="shape"/>
+  <circle cx="500" cy="120" r="5" fill="#fff"/>
+  <circle id="pulleyMovingWheel" cx="412" cy="270" r="44" class="shape"/>
+  <circle id="pulleyMovingAxle" cx="412" cy="270" r="5" fill="#fff"/>
+  <!-- Ein einziges Seil: Anker -> unter die lose Rolle -> über die feste Rolle -> Zugende -->
+  <path id="pulleyRope" d="M368 42 L368 270 A44 44 0 0 1 456 270 L456 120 A44 44 0 0 0 544 120 L544 330"
+        fill="none" stroke="#f5f5f5" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Last und beweglicher Rollenblock -->
+  <line id="pulleyHook" x1="412" y1="314" x2="412" y2="348" class="line"/>
+  <rect id="pulleyLoadBlock" x="362" y="348" width="100" height="48" class="shape"/>
+  <text id="pulleyLoadText" x="412" y="378" text-anchor="middle" font-size="16">Last</text>
+  <!-- Kräfte -->
+  <line id="pulleyPullArrow" x1="544" y1="270" x2="544" y2="315" class="force" marker-end="url(#pulleyArrow)"/>
+  <text x="563" y="285" font-size="15">F<tspan baseline-shift="sub" font-size="10">Zug</tspan></text>
+  <line id="pulleyLoadArrow" x1="412" y1="404" x2="412" y2="444" class="force2" marker-end="url(#pulleyArrowGray)"/>
+  <text x="432" y="438" font-size="14">F<tspan baseline-shift="sub" font-size="10">Last</tspan></text>
+  <!-- Zwei parallele tragende Seilstücke -->
+  <text x="195" y="190" font-size="14">1 · tragendes Seilstück</text>
+  <line x1="360" y1="195" x2="368" y2="195" class="thin" marker-end="url(#pulleyArrowGray)"/>
+  <text x="465" y="208" font-size="14">2 · tragendes Seilstück</text>
+  <text x="465" y="226" font-size="12" class="dim">parallel zu Stück 1</text>
+  <text x="558" y="111" font-size="14">Feste Rolle</text>
+  <text x="305" y="328" font-size="14">Lose Rolle</text>
+</svg>
+    <figcaption>Vereinfachtes Beispiel mit zwei tragenden Seilabschnitten (n = 2). Die Zugkraft wirkt am freien Seilende; die Last hängt am beweglichen Teil.</figcaption>
+  </figure>
+<div class="viz-controls pulley-controls" aria-label="Flaschenzug bewegen">
+  <div class="viz-control"><label for="pulleyPull">Gezogene Seillänge <output id="pulleyPullOut">0 cm</output></label><input id="pulleyPull" type="range" min="0" max="80" step="2" value="0"></div>
+  <div class="viz-control"><label for="pulleyLoad">Lastkraft <output id="pulleyLoadOut">600 N</output></label><input id="pulleyLoad" type="range" min="100" max="1000" step="50" value="600"></div>
+  <div class="viz-buttons"><button class="control" id="pulleyAnimate" type="button">Bewegung abspielen</button><button class="control" id="pulleyReset" type="button">Zurücksetzen</button></div>
+  <p class="viz-readout" id="pulleyReadout" aria-live="polite">Zugkraft: 300 N · Last hebt sich um 0 cm</p>
+  <p class="small">Das Modell zeigt den idealen 2:1-Flaschenzug: 2 tragende Seilstücke. Die feste Rolle lenkt das Seil um; die lose Rolle bewegt sich mit der Last.</p>
+</div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Die drei Grundformeln</h3>
+      <div class="formula block">F<sub>Zug</sub> = F<sub>Last</sub> / n</div>
+      <div class="formula block">s<sub>Zug</sub> = n · s<sub>Hub</sub></div>
+      <div class="formula block">F<sub>Zug</sub> · s<sub>Zug</sub> = F<sub>Last</sub> · s<sub>Hub</sub></div>
+      <p class="small">n = Anzahl der Seilabschnitte, die die bewegliche Last direkt tragen.</p>
+    </div>
+    <div class="panel">
+      <h3>Was bedeutet das?</h3>
+      <ul class="mini-list">
+        <li>Mehr tragende Seilstücke bedeuten weniger nötige Zugkraft.</li>
+        <li>Dafür muss entsprechend mehr Seil eingezogen werden.</li>
+        <li>Eine feste Rolle ändert hauptsächlich die Zugrichtung.</li>
+        <li>Eine lose Rolle bewegt sich mit der Last und bringt einen Kraftvorteil.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel · idealer Flaschenzug</div>
+    <p><strong>Gegeben:</strong> Lastkraft 600 N, n = 3 tragende Seilstücke, Hubhöhe 0,4 m.</p>
+    <p>Zugkraft: F<sub>Zug</sub> = 600 N / 3 = 200 N</p>
+    <p>Seilweg: s<sub>Zug</sub> = 3 · 0,4 m = 1,2 m</p>
+    <div class="result">Du ziehst mit 200 N an 1,2 m Seil, um die Last um 0,4 m anzuheben.</div>
+    <p class="small">Arbeitskontrolle: 200 N · 1,2 m = 600 N · 0,4 m = 240 J.</p>
+  </div>
+  <div class="warning"><strong>Wichtig:</strong> Zähle nur die Seilabschnitte, die den beweglichen Lastblock tragen. Reibung, Seilgewicht und Rollengewicht werden in den Schulformeln meist vernachlässigt. In echt ist die nötige Zugkraft etwas größer.</div>
+</section>
+
+<section id="hebel">
+  <div class="section-head">
+    <div class="section-no">05 / DREHMOMENT</div>
+    <div><h2>Hebel</h2><p class="section-intro">Ein Hebel kann Kräfte verstärken. Entscheidend ist nicht nur die Kraft, sondern auch ihr Abstand zum Drehpunkt.</p></div>
+  </div>
+  <figure class="diagram">
+    <svg id="leverDiagram" viewBox="0 0 720 300" role="img" aria-label="Interaktiver Hebel mit einstellbaren Hebelarmen und Kraftpfeilen">
+  <defs><marker id="leverarr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#fff"/></marker></defs>
+  <line id="leverBeam" x1="150" y1="140" x2="570" y2="140" class="line"/>
+  <path d="M315 140 L360 205 L405 140 Z" class="shape"/>
+  <circle cx="360" cy="140" r="5" fill="#fff"/>
+  <line id="leverForce1" x1="220" y1="46" x2="220" y2="127" class="force" marker-end="url(#leverarr)"/>
+  <line id="leverForce2" x1="500" y1="46" x2="500" y2="127" class="force2" marker-end="url(#leverarr)"/>
+  <line id="leverArm1" x1="220" y1="222" x2="360" y2="222" class="thin"/>
+  <line id="leverArm2" x1="360" y1="222" x2="500" y2="222" class="thin"/>
+  <line id="leverTick1" x1="220" y1="213" x2="220" y2="231" class="thin"/>
+  <line x1="360" y1="213" x2="360" y2="231" class="thin"/>
+  <line id="leverTick2" x1="500" y1="213" x2="500" y2="231" class="thin"/>
+  <text id="leverF1Label" x="195" y="30" font-size="17">F₁ = 50 N</text>
+  <text id="leverF2Label" x="475" y="30" font-size="17">F₂ = 50 N</text>
+  <text id="leverL1Label" x="270" y="248" font-size="15">l₁ = 1,0 m</text>
+  <text id="leverL2Label" x="415" y="248" font-size="15">l₂ = 1,0 m</text>
+  <text x="360" y="272" text-anchor="middle" font-size="14" class="dim">Drehpunkt</text>
+</svg>
+    <figcaption>Die Hebelarme l₁ und l₂ werden jeweils vom Drehpunkt bis zur Wirkungslinie der Kraft gemessen. Bei senkrechter Krafteinwirkung ist das einfach der Abstand entlang des Hebels.</figcaption>
+  </figure>
+<div class="viz-controls" aria-label="Hebel einstellen">
+  <div class="viz-control"><label for="leverF1Input">Kraft F₁ <output id="leverF1Out">50 N</output></label><input id="leverF1Input" type="range" min="10" max="100" step="5" value="50"></div>
+  <div class="viz-control"><label for="leverL1Input">Hebelarm l₁ <output id="leverL1Out">1,0 m</output></label><input id="leverL1Input" type="range" min="0.2" max="1.4" step="0.1" value="1"></div>
+  <div class="viz-control"><label for="leverL2Input">Hebelarm l₂ <output id="leverL2Out">1,0 m</output></label><input id="leverL2Input" type="range" min="0.2" max="1.4" step="0.1" value="1"></div>
+  <p class="viz-readout" id="leverReadout" aria-live="polite">Für Gleichgewicht muss F₂ = 50 N sein.</p>
+</div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Hebelgesetz</h3>
+      <div class="formula block">F<sub>1</sub> · l<sub>1</sub> = F<sub>2</sub> · l<sub>2</sub></div>
+      <p>Ein Hebel ist im Gleichgewicht, wenn die Drehwirkungen auf beiden Seiten gleich groß und entgegengesetzt sind.</p>
+      <p><strong>Drehmoment:</strong> M = F · l</p>
+      <p class="small">Einheit des Drehmoments: Newtonmeter (N·m). Der Hebelarm l ist der senkrechte Abstand zwischen Drehpunkt und Wirkungslinie der Kraft.</p>
+    </div>
+    <div class="panel">
+      <h3>Grafisch lösen</h3>
+      <ol class="steps">
+        <li>Drehpunkt markieren.</li>
+        <li>Kräfte mit Richtung einzeichnen.</li>
+        <li>Abstände vom Drehpunkt bis zu den Kraft-Wirkungslinien messen.</li>
+        <li>Hebelgesetz aufstellen und nach der gesuchten Größe umstellen.</li>
+      </ol>
+      <div class="note">Längerer Hebelarm = größere Drehwirkung bei gleicher Kraft. Deshalb lässt sich eine schwere Last mit einer kleineren Kraft bewegen, wenn man weiter außen drückt.</div>
+    </div>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel · Hebelgleichgewicht</div>
+    <p><strong>Gegeben:</strong> F<sub>1</sub> = 80 N, l<sub>1</sub> = 0,5 m, l<sub>2</sub> = 0,2 m</p>
+    <p>F<sub>1</sub> · l<sub>1</sub> = F<sub>2</sub> · l<sub>2</sub></p>
+    <p>F<sub>2</sub> = (80 N · 0,5 m) / 0,2 m</p>
+    <div class="result">F<sub>2</sub> = 200 N</div>
+  </div>
+  <div class="warning"><strong>Typischer Fehler:</strong> Nicht die Gesamtlänge des Hebels einsetzen, sondern immer den Abstand vom Drehpunkt zur jeweiligen Wirkungslinie der Kraft.</div>
+</section>
+
+<section id="ebene">
+  <div class="section-head">
+    <div class="section-no">06 / TRIGONOMETRIE</div>
+    <div><h2>Schiefe Ebene</h2><p class="section-intro">Eine schiefe Ebene erleichtert das Hochheben einer Last: Man braucht weniger Kraft, muss dafür aber einen längeren Weg zurücklegen. Die Gewichtskraft wird in zwei Komponenten zerlegt.</p></div>
+  </div>
+  <figure class="diagram">
+    <svg id="planeDiagram" viewBox="0 0 760 430" role="img" aria-label="Interaktive schiefe Ebene mit Gewichtskraft und den zwei Komponenten im Kräfteparallelogramm">
+  <defs>
+    <marker id="inclarr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#fff"/></marker>
+    <marker id="inclarr2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#aaa"/></marker>
+  </defs>
+  <path id="planeTriangle" d="M120 345 L500 45 L500 345 Z" fill="#090909" stroke="#777" stroke-width="1.5"/>
+  <line id="planeSlope" x1="120" y1="345" x2="500" y2="45" class="line"/>
+  <line x1="90" y1="345" x2="550" y2="345" class="thin"/>
+  <path id="planeAngleArc" d="M170 345 A50 50 0 0 0 168 332" class="thin"/>
+  <text id="planeAngleLabel" x="177" y="333" font-size="17">α = 30°</text>
+  <g id="planeBlock" transform="translate(330 225) rotate(-30)">
+    <rect x="-29" y="-21" width="58" height="42" class="shape"/>
+  </g>
+  <circle id="planeOrigin" cx="330" cy="225" r="4" fill="#fff"/>
+  <line id="planeFG" x1="330" y1="225" x2="330" y2="330" class="force" marker-end="url(#inclarr)"/>
+  <line id="planeParallel" x1="330" y1="225" x2="275" y2="250" class="force2" marker-end="url(#inclarr2)"/>
+  <line id="planeNormal" x1="330" y1="225" x2="385" y2="305" class="force2" marker-end="url(#inclarr2)"/>
+  <line id="planeParallelogramA" x1="275" y1="250" x2="330" y2="330" class="dash"/>
+  <line id="planeParallelogramB" x1="385" y1="305" x2="330" y2="330" class="dash"/>
+  <text id="planeFGLabel" x="344" y="330" font-size="15">F_G</text>
+  <text id="planeParallelLabel" x="230" y="254" font-size="14">F∥</text>
+  <text id="planeNormalLabel" x="395" y="305" font-size="14">F_N</text>
+  <text x="515" y="65" font-size="13" class="dim">Rampe</text>
+</svg>
+    <figcaption>Die Gewichtskraft F<sub>G</sub> zeigt immer senkrecht nach unten. Sie wird in eine Komponente parallel zur Ebene und eine Komponente senkrecht zur Ebene zerlegt. Die Pfeile sind schematisch.</figcaption>
+  </figure>
+<div class="viz-controls" aria-label="Schiefe Ebene einstellen">
+  <div class="viz-control"><label for="planeAlpha">Neigungswinkel α <output id="planeAlphaOut">30°</output></label><input id="planeAlpha" type="range" min="15" max="45" step="1" value="30"></div>
+  <div class="viz-control"><label for="planeMass">Masse m <output id="planeMassOut">10 kg</output></label><input id="planeMass" type="range" min="1" max="20" step="1" value="10"></div>
+  <p class="viz-readout" id="planeReadout" aria-live="polite">F_G = 98,1 N · F∥ = 49,1 N · F_N = 85,0 N</p>
+</div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Die drei Winkelfunktionen</h3>
+      <div class="formula block">sin(α) = Gegenkathete / Hypotenuse</div>
+      <div class="formula block">cos(α) = Ankathete / Hypotenuse</div>
+      <div class="formula block">tan(α) = Gegenkathete / Ankathete</div>
+      <p class="small">Bei der Rampe ist die Hypotenuse die Bahnlänge l, die Gegenkathete die Höhe h und die Ankathete die waagerechte Strecke x.</p>
+      <div class="formula block">sin(α) = h/l · cos(α) = x/l · tan(α) = h/x</div>
+    </div>
+    <div class="panel">
+      <h3>Kraftzerlegung</h3>
+      <div class="formula block">F<sub>parallel</sub> = F<sub>G</sub> · sin(α)</div>
+      <div class="formula block">F<sub>G, senkrecht</sub> = F<sub>G</sub> · cos(α)</div>
+      <p>Die parallele Komponente zieht den Körper die Ebene hinunter. Die senkrechte Komponente drückt ihn in die Oberfläche.</p>
+      <div class="note">Ohne weitere senkrechte Kräfte entspricht der Betrag der Normalkraft der senkrechten Gewichtskomponente: F<sub>N</sub> = F<sub>G</sub> · cos(α).</div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3>So zeichnest du das Kräfteparallelogramm an der Rampe</h3>
+    <ol class="steps">
+      <li>Am Schwerpunkt des Körpers die Gewichtskraft F<sub>G</sub> senkrecht nach unten einzeichnen.</li>
+      <li>Eine Achse parallel zur schiefen Ebene und eine zweite senkrecht zur Ebene festlegen.</li>
+      <li>F<sub>G</sub> in die parallele und die senkrechte Komponente zerlegen. Beide Komponenten beginnen am selben Punkt.</li>
+      <li>Die Komponenten bilden die Seiten eines Parallelogramms; ihre Vektorsumme ergibt wieder F<sub>G</sub>.</li>
+    </ol>
+  </div>
+  <div class="example">
+    <div class="example-label">Rechenbeispiel · Kräfte an einer Rampe</div>
+    <p><strong>Gegeben:</strong> m = 10 kg, α = 30°, g = 9,81 N/kg. Reibung wird vernachlässigt.</p>
+    <p>1. Gewichtskraft: F<sub>G</sub> = 10 · 9,81 = 98,1 N</p>
+    <p>2. Parallel zur Ebene: F<sub>parallel</sub> = 98,1 · sin(30°) = 98,1 · 0,5</p>
+    <p>3. Senkrecht zur Ebene: F<sub>G, senkrecht</sub> = 98,1 · cos(30°) ≈ 98,1 · 0,866</p>
+    <div class="result">F<sub>parallel</sub> = 49,1 N · F<sub>G, senkrecht</sub> ≈ 85,0 N</div>
+    <p class="small">Bei gleichförmigem Hochziehen ohne Reibung musst du ungefähr 49,1 N parallel zur Rampe aufbringen.</p>
+  </div>
+  <div class="warning"><strong>Merke:</strong> Je kleiner der Rampenwinkel, desto kleiner ist F<sub>parallel</sub>. Der Weg entlang der Rampe wird dafür länger. Mit Reibung ist zusätzlich die Reibungskraft zu überwinden.</div>
+</section>
+
+<section id="arbeit">
+  <div class="section-head">
+    <div class="section-no">07 / ENERGIE</div>
+    <div><h2>Mechanische Arbeit</h2><p class="section-intro">Arbeit wird verrichtet, wenn eine Kraft einen Körper entlang eines Weges bewegt oder Energie überträgt. Entscheidend ist die Kraftkomponente in Bewegungsrichtung.</p></div>
+  </div>
+  <div class="grid two">
+    <div class="panel">
+      <h3>Grundformel</h3>
+      <div class="formula">W = F · s</div>
+      <p>Das gilt, wenn Kraft und Weg in dieselbe Richtung zeigen und die Kraft konstant ist.</p>
+      <div class="formula block">W = F · s · cos(α)</div>
+      <p class="small">Allgemeiner Fall: α ist der Winkel zwischen Kraftrichtung und Bewegungsrichtung.</p>
+    </div>
+    <div class="panel">
+      <h3>Vorzeichen verstehen</h3>
+      <ul class="mini-list">
+        <li><strong>α = 0°:</strong> positive Arbeit, Kraft unterstützt die Bewegung.</li>
+        <li><strong>α = 90°:</strong> keine Arbeit durch diese Kraft, da sie quer zum Weg wirkt.</li>
+        <li><strong>α = 180°:</strong> negative Arbeit, Kraft wirkt entgegen der Bewegung.</li>
+      </ul>
+      <div class="note">Einheit: 1 Joule (J) = 1 Newtonmeter (N·m). Ohne Weg gibt es in diesem mechanischen Sinn keine Arbeit.</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px">Die wichtigsten Arbeitsarten</h3>
+  <div class="grid two" style="margin-top:12px">
+    <div class="panel">
+      <h3>01 · Hubarbeit</h3>
+      <div class="formula">W<sub>Hub</sub> = m · g · h</div>
+      <p>Arbeit, um einen Körper gegen die Gewichtskraft um die Höhe h anzuheben.</p>
+      <p class="small">Beispiel: Eine Kiste wird auf ein Regal gehoben. Entscheidend ist der Höhenunterschied, nicht der genaue Weg.</p>
+    </div>
+    <div class="panel">
+      <h3>02 · Beschleunigungsarbeit</h3>
+      <div class="formula">W<sub>Beschl.</sub> = ΔE<sub>kin</sub></div>
+      <div class="formula block small-formula">= ½ · m · (v₂² − v₁²)</div>
+      <p>Arbeit, durch die sich die Bewegungsenergie ändert. Wird ein Körper schneller, ist die Arbeit der beschleunigenden Gesamtkraft positiv.</p>
+    </div>
+    <div class="panel">
+      <h3>03 · Reibungsarbeit</h3>
+      <div class="formula">W<sub>Reibung</sub> = −F<sub>R</sub> · s</div>
+      <p>Reibung wirkt der Bewegung entgegen. Daher ist die Arbeit der Reibungskraft negativ; mechanische Energie wird meist in Wärme umgewandelt.</p>
+      <p class="small">Der Betrag der Reibungsarbeit ist F<sub>R</sub> · s.</p>
+    </div>
+    <div class="panel">
+      <h3>04 · Spannarbeit</h3>
+      <div class="formula">W<sub>Spann</sub> = ½ · D · s²</div>
+      <p>Arbeit, um eine ideale Feder aus der unbelasteten Lage um s zu dehnen oder zu stauchen. Die Kraft steigt dabei von 0 bis D·s.</p>
+      <p class="small">Die gespeicherte Federenergie entspricht der Fläche unter der Geraden im Kraft-Weg-Diagramm.</p>
+    </div>
+  </div>
+  <figure class="diagram">
+    <svg id="workDiagram" viewBox="0 0 720 300" role="img" aria-label="Interaktives Kraft-Weg-Diagramm mit markierter Dreiecksfläche der Spannarbeit">
+  <defs><marker id="workarr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#fff"/></marker></defs>
+  <line x1="100" y1="235" x2="610" y2="235" class="line" marker-end="url(#workarr)"/>
+  <line x1="100" y1="235" x2="100" y2="35" class="line" marker-end="url(#workarr)"/>
+  <path id="workArea" d="M100 235 L310 235 L310 125 Z" fill="#777" opacity=".3" stroke="none"/>
+  <line id="workSlope" x1="100" y1="235" x2="310" y2="125" class="force"/>
+  <line id="workProjection" x1="310" y1="125" x2="310" y2="235" class="dash"/>
+  <circle id="workPoint" cx="310" cy="125" r="5" fill="#fff"/>
+  <text x="620" y="252" font-size="16">s</text>
+  <text x="76" y="28" font-size="16">F</text>
+  <text x="285" y="276" font-size="14" class="dim">Verformung</text>
+  <text id="workForceLabel" x="320" y="115" font-size="14">F = 6 N</text>
+  <text id="workSLabel" x="320" y="255" font-size="13" class="dim">s = 3 cm</text>
+  <text id="workAreaLabel" x="395" y="165" font-size="16">W = 0,09 J</text>
+  <text x="395" y="188" font-size="13" class="dim">Fläche unter der Linie</text>
+</svg>
+    <figcaption>Bei einer Feder nimmt die Kraft gleichmäßig zu. Die Spannarbeit ist die Dreiecksfläche im F-s-Diagramm: W = ½ · (D·s) · s = ½ · D · s².</figcaption>
+  </figure>
+<div class="viz-controls" aria-label="Spannarbeit im Diagramm einstellen">
+  <div class="viz-control"><label for="workD">Federkonstante D <output id="workDOut">2 N/cm</output></label><input id="workD" type="range" min="0.5" max="5" step="0.5" value="2"></div>
+  <div class="viz-control"><label for="workS">Verformung s <output id="workSOut">3 cm</output></label><input id="workS" type="range" min="0" max="10" step="0.5" value="3"></div>
+  <p class="viz-readout" id="workReadout" aria-live="polite">Spannarbeit: W = 0,09 J</p>
+</div>
+  <details>
+    <summary>Erweiterung: Dreh- und elektrische Arbeit</summary>
+    <div class="details-body">
+      <p><strong>Dreh-/Rotationsarbeit:</strong> Bei konstantem Drehmoment gilt W = M · φ, wenn φ im Bogenmaß eingesetzt wird. Das ist die Übertragung der Formel W = F·s auf eine Drehbewegung.</p>
+      <p><strong>Elektrische Arbeit:</strong> In einem Stromkreis gilt W = U · I · t (Spannung mal Stromstärke mal Zeit). Das gehört zur Elektrizitätslehre und ist keine mechanische Arbeitsart.</p>
+    </div>
+  </details>
+  <div class="grid two" style="margin-top:14px">
+    <div class="panel soft">
+      <h3>Leistung ist nicht Arbeit</h3>
+      <div class="formula">P = W / t</div>
+      <p>Leistung sagt, wie viel Arbeit pro Zeit verrichtet wird. Einheit: Watt (W) = Joule pro Sekunde (J/s).</p>
+    </div>
+    <div class="panel soft">
+      <h3>Bezug zur Energie</h3>
+      <p>Arbeit überträgt Energie oder verändert sie. Hubarbeit erhöht die Lageenergie, Beschleunigungsarbeit die Bewegungsenergie und Spannarbeit die gespeicherte Federenergie.</p>
+    </div>
+  </div>
+  <div class="example">
+    <div class="example-label">Vier kurze Rechenbeispiele</div>
+    <p><strong>Hubarbeit:</strong> m = 4 kg, h = 2 m → W = 4 · 9,81 · 2 = <strong>78,48 J</strong>.</p>
+    <p><strong>Beschleunigungsarbeit:</strong> m = 2 kg, von 0 auf 3 m/s → W = ½ · 2 · (3² − 0²) = <strong>9 J</strong>.</p>
+    <p><strong>Reibungsarbeit:</strong> F<sub>R</sub> = 15 N, s = 4 m → W = −15 · 4 = <strong>−60 J</strong>.</p>
+    <p><strong>Spannarbeit:</strong> D = 200 N/m, s = 0,1 m → W = ½ · 200 · 0,1² = <strong>1 J</strong>.</p>
+  </div>
+</section>
+
+<section id="rechenweg">
+  <div class="section-head">
+    <div class="section-no">08 / METHODE</div>
+    <div><h2>So löst du Aufgaben sicher</h2><p class="section-intro">Ein sauberer Rechenweg bringt Übersicht und hilft, typische Fehler zu vermeiden.</p></div>
+  </div>
+  <div class="panel">
+    <ol class="steps">
+      <li><strong>Gegeben und gesucht notieren.</strong> Schreibe alle Größen mit Einheiten auf.</li>
+      <li><strong>Skizze zeichnen.</strong> Bei Kräften immer Pfeile und Richtungen eintragen; bei Hebeln den Drehpunkt markieren.</li>
+      <li><strong>Einheiten umrechnen.</strong> Zum Beispiel cm in m, g in kg oder Minuten in Sekunden.</li>
+      <li><strong>Passende Formel auswählen.</strong> Erst die Formel notieren, dann umstellen.</li>
+      <li><strong>Werte mit Einheiten einsetzen.</strong> Rechenschritte übersichtlich untereinander schreiben.</li>
+      <li><strong>Ergebnis prüfen.</strong> Passt die Einheit? Ist die Größenordnung sinnvoll? Bei Vektoren stimmt auch die Richtung?</li>
+      <li><strong>Antwortsatz formulieren.</strong> Nenne die gesuchte Größe mit Einheit.</li>
+    </ol>
+  </div>
+  <h3 style="margin-top:24px">Häufige Umrechnungen</h3>
+  <table>
+    <tr><th>Ausgang</th><th>Umrechnung</th></tr>
+    <tr><td>1 m</td><td>100 cm</td></tr>
+    <tr><td>1 cm</td><td>0,01 m</td></tr>
+    <tr><td>1 kg</td><td>1.000 g</td></tr>
+    <tr><td>1 min</td><td>60 s</td></tr>
+    <tr><td>1 h</td><td>3.600 s</td></tr>
+    <tr><td>1 J</td><td>1 N·m</td></tr>
+    <tr><td>1 W</td><td>1 J/s</td></tr>
+  </table>
+</section>
+
+<section id="training">
+  <div class="section-head">
+    <div class="section-no">09 / CHECK</div>
+    <div><h2>Lernkontrolle</h2><p class="section-intro">Teste dein Wissen mit dem Kurz-Quiz. Danach kannst du die ausführlichen Aufgabenlösungen aufklappen.</p></div>
+  </div>
+  <div class="quiz-wrap" id="quizArea">
+    <p class="quiz-intro">6 Fragen · eine richtige Antwort je Frage · die Auswertung zeigt dir direkt, was sitzt.</p>
+    <form id="quizForm"></form>
+    <div class="quiz-actions"><button class="control primary" type="button" id="checkQuiz">Antworten prüfen</button><button class="control" type="button" id="resetQuiz">Quiz zurücksetzen</button><span class="quiz-score" id="quizScore" aria-live="polite">Noch nicht ausgewertet</span></div>
+  </div>
+  <details>
+    <summary>1. Welche Gewichtskraft hat ein Körper mit 8 kg Masse auf der Erde?</summary>
+    <div class="details-body">F<sub>G</sub> = m·g = 8 kg · 9,81 N/kg = <strong>78,48 N</strong> (mit g ≈ 10 N/kg: ungefähr 80 N).</div>
+  </details>
+  <details>
+    <summary>2. Zwei senkrechte Kräfte betragen 6 N und 8 N. Wie groß ist die resultierende Kraft?</summary>
+    <div class="details-body">F<sub>res</sub> = √(6² + 8²) N = √100 N = <strong>10 N</strong>.</div>
+  </details>
+  <details>
+    <summary>3. Eine Feder mit D = 5 N/cm wird um 4 cm gedehnt. Welche Kraft wirkt?</summary>
+    <div class="details-body">F = D·s = 5 N/cm · 4 cm = <strong>20 N</strong>.</div>
+  </details>
+  <details>
+    <summary>4. Ein Flaschenzug hat 4 tragende Seilstücke. Die Lastkraft beträgt 800 N. Wie groß ist die ideale Zugkraft?</summary>
+    <div class="details-body">F<sub>Zug</sub> = F<sub>Last</sub>/n = 800 N/4 = <strong>200 N</strong>.</div>
+  </details>
+  <details>
+    <summary>5. An einem Hebel wirken 50 N im Abstand 0,4 m. Welche Kraft ist im Abstand 0,2 m zum Gleichgewicht nötig?</summary>
+    <div class="details-body">50 N · 0,4 m = F₂ · 0,2 m → F₂ = 20 N·m / 0,2 m = <strong>100 N</strong>.</div>
+  </details>
+  <details>
+    <summary>6. Eine Rampe hat α = 30°. Wie groß ist die parallele Gewichtskraft-Komponente bei F<sub>G</sub> = 120 N?</summary>
+    <div class="details-body">F<sub>parallel</sub> = F<sub>G</sub>·sin(30°) = 120 N · 0,5 = <strong>60 N</strong>.</div>
+  </details>
+  <details>
+    <summary>7. Wie viel Hubarbeit ist nötig, um 5 kg um 3 m anzuheben?</summary>
+    <div class="details-body">W = m·g·h = 5 kg · 9,81 N/kg · 3 m = <strong>147,15 J</strong>.</div>
+  </details>
+  <details>
+    <summary>8. Warum spart ein Flaschenzug keine Arbeit?</summary>
+    <div class="details-body">Im Idealfall wird die nötige Kraft um den Faktor n kleiner, dafür wird der n-fache Seilweg gezogen. Das Produkt aus Kraft und Weg bleibt gleich: F<sub>Zug</sub>·s<sub>Zug</sub> = F<sub>Last</sub>·s<sub>Hub</sub>.</div>
+  </details>
+</section>
+
+<section id="merkliste">
+  <div class="section-head">
+    <div class="section-no">10 / MERKEN</div>
+    <div><h2>Die häufigsten Fehler</h2><p class="section-intro">Diese Punkte kurz vor einer Klassenarbeit noch einmal durchgehen.</p></div>
+  </div>
+  <div class="grid two">
+    <div class="panel"><h3>Formeln & Einheiten</h3><ul class="mini-list">
+      <li>Masse (kg) und Gewichtskraft (N) nicht verwechseln.</li>
+      <li>F = m·g ist die Gewichtskraft; F = m·a ist das allgemeine Kraftgesetz.</li>
+      <li>Bei D in N/cm muss s in cm eingesetzt werden; bei D in N/m muss s in m stehen.</li>
+      <li>Arbeit wird in Joule angegeben, Leistung in Watt.</li>
+    </ul></div>
+    <div class="panel"><h3>Grafiken & Richtungen</h3><ul class="mini-list">
+      <li>Kräfteparallelogramm: beide Pfeile beginnen am selben Angriffspunkt.</li>
+      <li>Flaschenzug: nur tragende Seilabschnitte zählen.</li>
+      <li>Hebelarme immer vom Drehpunkt aus messen.</li>
+      <li>Schiefe Ebene: sin gehört zur parallelen, cos zur senkrechten Gewichtskraft-Komponente.</li>
+      <li>Reibungsarbeit ist bei Bewegung entgegen der Reibungskraft negativ.</li>
+    </ul></div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <span>PHYSIK · MECHANIK · LERNZETTEL</span>
+  <a class="back" href="#top">Zurück nach oben ↑</a>
+</footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  // Reading progress and chapter completion
+  const mainSections = $$('main > section');
+  const chapterStatus = $('#chapterStatus');
+  const done = new Set();
+  chapterStatus.textContent = `0 / ${mainSections.length} Kapitel gelernt`;
+  mainSections.forEach((section, index) => {
+    const head = $('.section-head > div:last-child', section);
+    if (!head) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'chapter-tools';
+    const btn = document.createElement('button');
+    btn.className = 'chapter-done';
+    btn.type = 'button';
+    btn.textContent = 'Als gelernt markieren';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', () => {
+      if (done.has(section.id)) {
+        done.delete(section.id);
+        btn.setAttribute('aria-pressed', 'false');
+        btn.textContent = 'Als gelernt markieren';
+      } else {
+        done.add(section.id);
+        btn.setAttribute('aria-pressed', 'true');
+        btn.textContent = 'Gelernt';
+      }
+      chapterStatus.textContent = `${done.size} / ${mainSections.length} Kapitel gelernt`;
+    });
+    wrap.appendChild(btn);
+    head.appendChild(wrap);
+  });
+
+  const progressBar = $('#readingProgressBar');
+  function updateReadingProgress() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? Math.max(0, Math.min(100, (window.scrollY / max) * 100)) : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateReadingProgress, { passive: true });
+  window.addEventListener('resize', updateReadingProgress);
+  updateReadingProgress();
+
+  // Search across chapter text
+  const search = $('#chapterSearch');
+  const searchCount = $('#searchCount');
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLocaleLowerCase('de');
+    let visible = 0;
+    mainSections.forEach(section => {
+      const match = !q || section.textContent.toLocaleLowerCase('de').includes(q);
+      section.classList.toggle('search-hidden', !match);
+      if (match) visible++;
+    });
+    searchCount.textContent = q ? `${visible} / ${mainSections.length} Kapitel gefunden` : 'Alle Kapitel sichtbar';
+  });
+
+  // Global expand/collapse and formula masking
+  const detailsButton = $('#toggleDetails');
+  let detailsOpen = false;
+  detailsButton.addEventListener('click', () => {
+    detailsOpen = !detailsOpen;
+    $$('details').forEach(d => d.open = detailsOpen);
+    detailsButton.textContent = detailsOpen ? 'Alle Lösungen schließen' : 'Alle Lösungen öffnen';
+  });
+  const formulaButton = $('#toggleFormulas');
+  formulaButton.addEventListener('click', () => {
+    const hidden = document.body.classList.toggle('formulas-hidden');
+    formulaButton.textContent = hidden ? 'Formeln anzeigen' : 'Formeln abdecken';
+    formulaButton.setAttribute('aria-pressed', String(hidden));
+  });
+
+  // Interactive calculator: no eval and all calculations stay in the browser.
+  const calculatorDefinitions = {
+    weight: {
+      fields: [{id:'m',label:'Masse m',unit:'kg',value:5},{id:'g',label:'Ortsfaktor g',unit:'N/kg',value:9.81}],
+      solve: v => ({value:v.m*v.g, unit:'N', step:`F_G = ${fmt(v.m)} kg · ${fmt(v.g)} N/kg`})
+    },
+    hooke: {
+      fields: [{id:'D',label:'Federkonstante D',unit:'N/m',value:200},{id:'s',label:'Verformung s',unit:'m',value:0.03}],
+      solve: v => ({value:v.D*v.s, unit:'N', step:`F = ${fmt(v.D)} N/m · ${fmt(v.s)} m`})
+    },
+    pulley: {
+      fields: [{id:'load',label:'Lastkraft FLast',unit:'N',value:600},{id:'n',label:'Tragende Seilstücke n',unit:'Stück',value:3}],
+      solve: v => ({value:v.load/v.n, unit:'N', step:`F_Zug = ${fmt(v.load)} N / ${fmt(v.n)}`})
+    },
+    lever: {
+      fields: [{id:'F2',label:'Kraft F₂',unit:'N',value:50},{id:'l2',label:'Hebelarm l₂',unit:'m',value:0.4},{id:'l1',label:'Hebelarm l₁',unit:'m',value:0.2}],
+      solve: v => ({value:v.F2*v.l2/v.l1, unit:'N', step:`F₁ = (${fmt(v.F2)} N · ${fmt(v.l2)} m) / ${fmt(v.l1)} m`})
+    },
+    plane: {
+      fields: [{id:'FG',label:'Gewichtskraft FG',unit:'N',value:120},{id:'alpha',label:'Neigungswinkel α',unit:'Grad',value:30}],
+      solve: v => ({value:v.FG*Math.sin(v.alpha*Math.PI/180), unit:'N', step:`F_∥ = ${fmt(v.FG)} N · sin(${fmt(v.alpha)}°)`})
+    },
+    work: {
+      fields: [{id:'F',label:'Kraft F',unit:'N',value:25},{id:'s',label:'Weg s',unit:'m',value:4},{id:'alpha',label:'Winkel zur Bewegung α',unit:'Grad',value:0}],
+      solve: v => ({value:v.F*v.s*Math.cos(v.alpha*Math.PI/180), unit:'J', step:`W = ${fmt(v.F)} N · ${fmt(v.s)} m · cos(${fmt(v.alpha)}°)`})
+    },
+    lifting: {
+      fields: [{id:'m',label:'Masse m',unit:'kg',value:4},{id:'g',label:'Ortsfaktor g',unit:'N/kg',value:9.81},{id:'h',label:'Höhe h',unit:'m',value:2}],
+      solve: v => ({value:v.m*v.g*v.h, unit:'J', step:`W_Hub = ${fmt(v.m)} kg · ${fmt(v.g)} N/kg · ${fmt(v.h)} m`})
+    },
+    power: {
+      fields: [{id:'W',label:'Arbeit W',unit:'J',value:600},{id:'t',label:'Zeit t',unit:'s',value:12}],
+      solve: v => ({value:v.W/v.t, unit:'W', step:`P = ${fmt(v.W)} J / ${fmt(v.t)} s`})
+    }
+  };
+  function fmt(n) { return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 3 }).format(n); }
+  const calcType = $('#calcType'), calcFields = $('#calcFields'), calcResult = $('#calcResult');
+  function renderCalculator() {
+    const def = calculatorDefinitions[calcType.value];
+    calcFields.innerHTML = '';
+    def.fields.forEach(field => {
+      const wrap = document.createElement('div'); wrap.className = 'calc-field';
+      const label = document.createElement('label'); label.htmlFor = 'calc-' + field.id; label.textContent = `${field.label} (${field.unit})`;
+      const input = document.createElement('input'); input.id = 'calc-' + field.id; input.type = 'number'; input.step = 'any'; input.value = field.value; input.inputMode = 'decimal';
+      wrap.append(label, input); calcFields.appendChild(wrap);
+    });
+    calcResult.classList.remove('visible');
+  }
+  calcType.addEventListener('change', renderCalculator);
+  $('#calculateBtn').addEventListener('click', () => {
+    const def = calculatorDefinitions[calcType.value], values = {};
+    for (const field of def.fields) {
+      const raw = $('#calc-' + field.id).value;
+      const value = Number(raw);
+      if (raw.trim() === '' || !Number.isFinite(value)) { $('#calcValue').textContent = 'Bitte gültige Werte eingeben.'; $('#calcSteps').textContent = ''; calcResult.classList.add('visible'); return; }
+      values[field.id] = value;
+    }
+    if ((calcType.value === 'pulley' && (!Number.isInteger(values.n) || values.n <= 0)) || (calcType.value === 'lever' && values.l1 <= 0) || (calcType.value === 'power' && values.t <= 0) || (calcType.value === 'hooke' && values.D < 0) || (calcType.value === 'work' && values.alpha < 0)) {
+      $('#calcValue').textContent = 'Werte prüfen'; $('#calcSteps').textContent = 'Seilzahl muss eine positive ganze Zahl sein; Nenner dürfen nicht 0 sein.'; calcResult.classList.add('visible'); return;
+    }
+    const result = def.solve(values);
+    if (!Number.isFinite(result.value)) { $('#calcValue').textContent = 'Ergebnis nicht berechenbar'; $('#calcSteps').textContent = ''; }
+    else { $('#calcValue').textContent = `${fmt(result.value)} ${result.unit}`; $('#calcSteps').textContent = `${result.step} = ${fmt(result.value)} ${result.unit}`; }
+    calcResult.classList.add('visible');
+  });
+  $('#resetCalc').addEventListener('click', renderCalculator);
+  renderCalculator();
+
+  // Interactive six-question multiple-choice quiz
+  const quizData = [
+    {q:'Welche Gewichtskraft hat eine Masse von 5 kg bei g = 10 N/kg?', a:['5 N','50 N','500 N'], correct:1, why:'F_G = m · g = 5 kg · 10 N/kg = 50 N.'},
+    {q:'Eine Feder hat D = 4 N/cm und wird um 3 cm gedehnt. Wie groß ist F?', a:['7 N','12 N','1,33 N'], correct:1, why:'F = D · s = 4 N/cm · 3 cm = 12 N.'},
+    {q:'Ein idealer Flaschenzug trägt die Last mit 3 Seilstücken. Bei 600 N Last ist Fzug …', a:['200 N','600 N','1.800 N'], correct:0, why:'F_Zug = F_Last / n = 600 N / 3 = 200 N.'},
+    {q:'Am Hebel wirken F₁ = 20 N bei l₁ = 0,5 m. l₂ = 0,2 m. Welche Kraft F₂ hält Gleichgewicht?', a:['8 N','25 N','50 N'], correct:0, why:'F₁ · l₁ = F₂ · l₂, also F₂ = 20 · 0,5 / 0,2 = 50 N. (Richtige Auswahl: 50 N.)'},
+    {q:'Bei Fg = 100 N und α = 30° beträgt die parallele Komponente …', a:['86,6 N','50 N','100 N'], correct:1, why:'F_parallel = F_G · sin(30°) = 100 N · 0,5 = 50 N.'},
+    {q:'Welche Arbeit verrichtet eine konstante Kraft von 25 N parallel über 4 m?', a:['6,25 J','29 J','100 J'], correct:2, why:'W = F · s = 25 N · 4 m = 100 J.'}
+  ];
+  // Correct the lever option ordering / answer explicitly.
+  quizData[3].a = ['8 N','50 N','25 N']; quizData[3].correct = 1;
+  const quizForm = $('#quizForm');
+  function buildQuiz() {
+    quizForm.innerHTML = '';
+    quizData.forEach((item, i) => {
+      const fieldset = document.createElement('fieldset'); fieldset.className = 'quiz-question'; fieldset.dataset.index = i;
+      const legend = document.createElement('legend'); legend.textContent = `${i+1}. ${item.q}`; fieldset.appendChild(legend);
+      item.a.forEach((answer, j) => {
+        const label = document.createElement('label'); label.className = 'quiz-option';
+        const radio = document.createElement('input'); radio.type = 'radio'; radio.name = `q${i}`; radio.value = j;
+        const span = document.createElement('span'); span.textContent = answer;
+        label.append(radio, span); fieldset.appendChild(label);
+      });
+      const feedback = document.createElement('p'); feedback.className = 'quiz-feedback'; feedback.id = `quizFeedback${i}`; fieldset.appendChild(feedback);
+      quizForm.appendChild(fieldset);
+    });
+    $('#quizScore').textContent = 'Noch nicht ausgewertet';
+    $('#checkQuiz').disabled = false;
+    $('#checkQuiz').textContent = 'Antworten prüfen';
+  }
+  $('#checkQuiz').addEventListener('click', () => {
+    let score = 0;
+    quizData.forEach((item, i) => {
+      const fieldset = $(`fieldset[data-index="${i}"]`, quizForm);
+      const selected = $('input:checked', fieldset);
+      const labels = $$('.quiz-option', fieldset);
+      labels.forEach((label, j) => {
+        if (j === item.correct) label.classList.add('correct');
+        if (selected && Number(selected.value) === j && j !== item.correct) label.classList.add('incorrect');
+        $$('input', label).forEach(input => input.disabled = true);
+      });
+      const right = selected && Number(selected.value) === item.correct;
+      if (right) score++;
+      $(`#quizFeedback${i}`).textContent = (right ? 'Richtig. ' : 'Noch nicht richtig. ') + item.why;
+    });
+    $('#quizScore').textContent = `${score} / ${quizData.length} richtig`;
+    $('#checkQuiz').disabled = true;
+  });
+  $('#resetQuiz').addEventListener('click', buildQuiz);
+  buildQuiz();
+
+  // Interactive vector parallelogram
+  const forceInputs = ['forceF1','forceF2','forceAngle'].map(id => document.getElementById(id));
+  if (forceInputs.every(Boolean)) {
+    const [f1Input, f2Input, angleInput] = forceInputs;
+    const setLine = (id, x1, y1, x2, y2) => {
+      const el = document.getElementById(id);
+      el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+      el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+    };
+    const setText = (id, x, y, value) => {
+      const el = document.getElementById(id);
+      el.setAttribute('x', x); el.setAttribute('y', y);
+      if (value !== undefined) el.textContent = value;
+    };
+    function updateForceDiagram() {
+      const f1 = Number(f1Input.value), f2 = Number(f2Input.value), deg = Number(angleInput.value);
+      const a = deg * Math.PI / 180, ox = 270, oy = 290, scale = 17;
+      const p1 = {x: ox + f1*scale, y: oy};
+      const p2 = {x: ox + f2*scale*Math.cos(a), y: oy - f2*scale*Math.sin(a)};
+      const sum = {x: p1.x+p2.x-ox, y: p1.y+p2.y-oy};
+      setLine('forceVector1', ox, oy, p1.x, p1.y);
+      setLine('forceVector2', ox, oy, p2.x, p2.y);
+      setLine('forceParaA', p1.x, p1.y, sum.x, sum.y);
+      setLine('forceParaB', p2.x, p2.y, sum.x, sum.y);
+      setLine('forceResult', ox, oy, sum.x, sum.y);
+      setText('forceLabel1', p1.x-5, Math.min(330,p1.y+26), `F₁ = ${fmt(f1)} N`);
+      setText('forceLabel2', p2.x+8, p2.y-12, `F₂ = ${fmt(f2)} N`);
+      const magnitude = Math.hypot(sum.x-ox, sum.y-oy)/scale;
+      setText('forceLabelRes', sum.x+8, sum.y-12, `F_res = ${fmt(magnitude)} N`);
+      $('#forceF1Out').textContent = `${fmt(f1)} N`;
+      $('#forceF2Out').textContent = `${fmt(f2)} N`;
+      $('#forceAngleOut').textContent = `${deg}°`;
+      $('#forceReadout').textContent = `Resultierende: ${fmt(magnitude)} N · Winkel zur F₁-Richtung: ${fmt(Math.atan2(oy-sum.y,sum.x-ox)*180/Math.PI)}°`;
+    }
+    forceInputs.forEach(el => el.addEventListener('input', updateForceDiagram));
+    updateForceDiagram();
+  }
+
+  // Interactive Hooke graph
+  if ($('#hookeD') && $('#hookeS')) {
+    function updateHookeGraph() {
+      const D = Number($('#hookeD').value), s = Number($('#hookeS').value), F = D*s;
+      const x = 72 + 34*s, y = 245 - 3.2*F;
+      const line = $('#hookeLine');
+      line.setAttribute('x2', x); line.setAttribute('y2', y);
+      [['hookeProjX',x,y,'x2'],['hookeProjX',x,y,'x1']].forEach(() => {});
+      $('#hookeProjX').setAttribute('x1',x); $('#hookeProjX').setAttribute('y1',y); $('#hookeProjX').setAttribute('x2',x); $('#hookeProjX').setAttribute('y2',245);
+      $('#hookeProjY').setAttribute('x1',72); $('#hookeProjY').setAttribute('y1',y); $('#hookeProjY').setAttribute('x2',x); $('#hookeProjY').setAttribute('y2',y);
+      $('#hookePoint').setAttribute('cx',x); $('#hookePoint').setAttribute('cy',y);
+      $('#hookePointLabel').setAttribute('x',Math.min(x+10,380)); $('#hookePointLabel').setAttribute('y',Math.max(y-10,45));
+      $('#hookePointLabel').textContent = `F = ${fmt(F)} N`;
+      $('#hookeSLabel').setAttribute('x',Math.min(x+8,390)); $('#hookeSLabel').textContent = `s = ${fmt(s)} cm`;
+      $('#hookeDOut').textContent = `${fmt(D)} N/cm`; $('#hookeSOut').textContent = `${fmt(s)} cm`;
+      $('#hookeReadout').textContent = `Federkraft: F = D · s = ${fmt(D)} · ${fmt(s)} = ${fmt(F)} N`;
+    }
+    $('#hookeD').addEventListener('input',updateHookeGraph);
+    $('#hookeS').addEventListener('input',updateHookeGraph);
+    updateHookeGraph();
+  }
+
+  // Interactive 2:1 block-and-tackle. The rope is one continuous path.
+  if ($('#pulleyPull') && $('#pulleyLoad')) {
+    const pullInput = $('#pulleyPull'), loadInput = $('#pulleyLoad');
+    const movingCenter = {x:412, y:270}, fixedCenter = {x:500,y:120}, r = 44;
+    let pulleyAnimation = null;
+    function updatePulley() {
+      const pulled = Number(pullInput.value), load = Number(loadInput.value);
+      const liftPx = pulled * 0.62;
+      const cy = movingCenter.y - liftPx;
+      const anchorX = movingCenter.x-r, supportX = movingCenter.x+r, freeX = fixedCenter.x+r;
+      const freeEndY = 330 + 2*liftPx;
+      // The two load-bearing rope sections stay vertical and parallel: the first
+      // is anchored above the moving wheel; the second runs up to the fixed wheel.
+      const ropeD = `M ${anchorX} 42 L ${anchorX} ${cy} A ${r} ${r} 0 0 1 ${supportX} ${cy} L ${supportX} ${fixedCenter.y} A ${r} ${r} 0 0 0 ${freeX} ${fixedCenter.y} L ${freeX} ${freeEndY}`;
+      $('#pulleyRope').setAttribute('d',ropeD);
+      $('#pulleyMovingWheel').setAttribute('cy',cy);
+      $('#pulleyMovingAxle').setAttribute('cy',cy);
+      $('#pulleyHook').setAttribute('y1',cy+r); $('#pulleyHook').setAttribute('y2',cy+r+34);
+      $('#pulleyLoadBlock').setAttribute('y',cy+r+34);
+      $('#pulleyLoadText').setAttribute('y',cy+r+63);
+      $('#pulleyLoadArrow').setAttribute('y1',cy+r+84); $('#pulleyLoadArrow').setAttribute('y2',cy+r+119);
+      const arrowStart = Math.max(fixedCenter.y+100,freeEndY-48);
+      $('#pulleyPullArrow').setAttribute('x1',freeX); $('#pulleyPullArrow').setAttribute('x2',freeX);
+      $('#pulleyPullArrow').setAttribute('y1',arrowStart); $('#pulleyPullArrow').setAttribute('y2',Math.min(freeEndY+4,455));
+      const idealPull = load/2, loadLift = pulled/2;
+      $('#pulleyPullOut').textContent = `${fmt(pulled)} cm`;
+      $('#pulleyLoadOut').textContent = `${fmt(load)} N`;
+      $('#pulleyReadout').textContent = `F_Zug = ${fmt(load)} N / 2 = ${fmt(idealPull)} N · Lastweg = ${fmt(loadLift)} cm`;
+    }
+    pullInput.addEventListener('input',updatePulley);
+    loadInput.addEventListener('input',updatePulley);
+    $('#pulleyReset').addEventListener('click',() => {
+      if (pulleyAnimation) { clearInterval(pulleyAnimation); pulleyAnimation = null; }
+      pullInput.value = '0'; loadInput.value = '600'; updatePulley();
+      $('#pulleyAnimate').textContent = 'Bewegung abspielen';
+    });
+    $('#pulleyAnimate').addEventListener('click',() => {
+      if (pulleyAnimation) {
+        clearInterval(pulleyAnimation); pulleyAnimation = null;
+        $('#pulleyAnimate').textContent = 'Bewegung abspielen';
+        return;
+      }
+      if (Number(pullInput.value) >= 80) pullInput.value = '0';
+      $('#pulleyAnimate').textContent = 'Pausieren';
+      pulleyAnimation = setInterval(() => {
+        const next = Number(pullInput.value)+2;
+        pullInput.value = String(Math.min(next,80));
+        updatePulley();
+        if (next >= 80) {
+          clearInterval(pulleyAnimation); pulleyAnimation = null;
+          $('#pulleyAnimate').textContent = 'Erneut abspielen';
+        }
+      },70);
+    });
+    updatePulley();
+  }
+
+  // Interactive lever: the counter-force is computed from the lever law.
+  if ($('#leverF1Input')) {
+    function updateLever() {
+      const F1=Number($('#leverF1Input').value), l1=Number($('#leverL1Input').value), l2=Number($('#leverL2Input').value);
+      const F2=F1*l1/l2, pivot=360, scale=142;
+      const x1=pivot-l1*scale, x2=pivot+l2*scale;
+      const start1=Math.max(12,125-Math.min(100,F1*.65)), start2=Math.max(12,125-Math.min(100,F2*.65));
+      $('#leverBeam').setAttribute('x1',x1-24); $('#leverBeam').setAttribute('x2',x2+24);
+      $('#leverForce1').setAttribute('x1',x1); $('#leverForce1').setAttribute('x2',x1);
+      $('#leverForce1').setAttribute('y1',start1); $('#leverForce1').setAttribute('y2',127);
+      $('#leverForce2').setAttribute('x1',x2); $('#leverForce2').setAttribute('x2',x2);
+      $('#leverForce2').setAttribute('y1',start2); $('#leverForce2').setAttribute('y2',127);
+      $('#leverArm1').setAttribute('x1',x1); $('#leverArm1').setAttribute('x2',pivot);
+      $('#leverArm2').setAttribute('x1',pivot); $('#leverArm2').setAttribute('x2',x2);
+      $('#leverTick1').setAttribute('x1',x1); $('#leverTick1').setAttribute('x2',x1);
+      $('#leverTick2').setAttribute('x1',x2); $('#leverTick2').setAttribute('x2',x2);
+      $('#leverF1Label').setAttribute('x',Math.max(12,x1-28)); $('#leverF1Label').textContent=`F₁ = ${fmt(F1)} N`;
+      $('#leverF2Label').setAttribute('x',Math.min(590,x2-28)); $('#leverF2Label').textContent=`F₂ = ${fmt(F2)} N`;
+      $('#leverL1Label').setAttribute('x',(x1+pivot)/2-20); $('#leverL1Label').textContent=`l₁ = ${fmt(l1)} m`;
+      $('#leverL2Label').setAttribute('x',(pivot+x2)/2-20); $('#leverL2Label').textContent=`l₂ = ${fmt(l2)} m`;
+      $('#leverF1Out').textContent=`${fmt(F1)} N`; $('#leverL1Out').textContent=`${fmt(l1)} m`; $('#leverL2Out').textContent=`${fmt(l2)} m`;
+      $('#leverReadout').textContent=`Gleichgewicht: F₁ · l₁ = F₂ · l₂ → F₂ = ${fmt(F2)} N.`;
+    }
+    ['leverF1Input','leverL1Input','leverL2Input'].forEach(id => $('#'+id).addEventListener('input',updateLever));
+    updateLever();
+  }
+
+  // Interactive inclined plane and force parallelogram.
+  if ($('#planeAlpha')) {
+    function updatePlane() {
+      const deg=Number($('#planeAlpha').value), mass=Number($('#planeMass').value), a=deg*Math.PI/180;
+      const fg=mass*9.81, fpar=fg*Math.sin(a), fn=fg*Math.cos(a);
+      const baseX=120, baseY=345, endX=500, run=380, rise=run*Math.tan(a);
+      const endY=baseY-rise;
+      $('#planeTriangle').setAttribute('d',`M ${baseX} ${baseY} L ${endX} ${endY} L ${endX} ${baseY} Z`);
+      $('#planeSlope').setAttribute('x1',baseX); $('#planeSlope').setAttribute('y1',baseY);
+      $('#planeSlope').setAttribute('x2',endX); $('#planeSlope').setAttribute('y2',endY);
+      const cx=baseX+run*.54, cy=baseY-rise*.54;
+      $('#planeBlock').setAttribute('transform',`translate(${cx} ${cy}) rotate(${-deg})`);
+      $('#planeOrigin').setAttribute('cx',cx); $('#planeOrigin').setAttribute('cy',cy);
+      const vecLen=70+mass*3;
+      const fgEnd={x:cx,y:cy+vecLen};
+      const parEnd={x:cx-vecLen*Math.sin(a)*Math.cos(a),y:cy+vecLen*Math.sin(a)*Math.sin(a)};
+      const normalEnd={x:cx+vecLen*Math.cos(a)*Math.sin(a),y:cy+vecLen*Math.cos(a)*Math.cos(a)};
+      const setVec=(id,p)=>{const e=$('#'+id);e.setAttribute('x1',cx);e.setAttribute('y1',cy);e.setAttribute('x2',p.x);e.setAttribute('y2',p.y);};
+      setVec('planeFG',fgEnd);setVec('planeParallel',parEnd);setVec('planeNormal',normalEnd);
+      const setDash=(id,p1,p2)=>{const e=$('#'+id);e.setAttribute('x1',p1.x);e.setAttribute('y1',p1.y);e.setAttribute('x2',p2.x);e.setAttribute('y2',p2.y);};
+      setDash('planeParallelogramA',parEnd,fgEnd);setDash('planeParallelogramB',normalEnd,fgEnd);
+      $('#planeFGLabel').setAttribute('x',fgEnd.x+8); $('#planeFGLabel').setAttribute('y',fgEnd.y);
+      $('#planeParallelLabel').setAttribute('x',parEnd.x-62); $('#planeParallelLabel').setAttribute('y',parEnd.y+5);
+      $('#planeNormalLabel').setAttribute('x',normalEnd.x+9); $('#planeNormalLabel').setAttribute('y',normalEnd.y+2);
+      const arcX=baseX+50*Math.cos(a), arcY=baseY-50*Math.sin(a);
+      $('#planeAngleArc').setAttribute('d',`M ${baseX+50} ${baseY} A 50 50 0 0 0 ${arcX} ${arcY}`);
+      $('#planeAngleLabel').setAttribute('x',baseX+62*Math.cos(a/2)); $('#planeAngleLabel').setAttribute('y',baseY-62*Math.sin(a/2));
+      $('#planeAngleLabel').textContent=`α = ${deg}°`;
+      $('#planeAlphaOut').textContent=`${deg}°`;$('#planeMassOut').textContent=`${fmt(mass)} kg`;
+      $('#planeReadout').textContent=`F_G = ${fmt(fg)} N · F∥ = ${fmt(fpar)} N · F_N = ${fmt(fn)} N`;
+    }
+    ['planeAlpha','planeMass'].forEach(id=>$('#'+id).addEventListener('input',updatePlane));
+    updatePlane();
+  }
+
+  // Interactive spring work: the shaded triangle is the stored elastic energy.
+  if ($('#workD')) {
+    function updateWorkGraph() {
+      const D=Number($('#workD').value), s=Number($('#workS').value), F=D*s;
+      const x=100+35*s, y=235-3*F, W=.5*F*s/100;
+      $('#workArea').setAttribute('d',`M 100 235 L ${x} 235 L ${x} ${y} Z`);
+      $('#workSlope').setAttribute('x2',x); $('#workSlope').setAttribute('y2',y);
+      $('#workProjection').setAttribute('x1',x); $('#workProjection').setAttribute('y1',y);
+      $('#workProjection').setAttribute('x2',x); $('#workProjection').setAttribute('y2',235);
+      $('#workPoint').setAttribute('cx',x); $('#workPoint').setAttribute('cy',y);
+      $('#workForceLabel').setAttribute('x',Math.min(x+10,500)); $('#workForceLabel').setAttribute('y',Math.max(y-10,45));
+      $('#workForceLabel').textContent=`F = ${fmt(F)} N`;
+      $('#workSLabel').setAttribute('x',Math.min(x+8,500));$('#workSLabel').textContent=`s = ${fmt(s)} cm`;
+      $('#workAreaLabel').textContent=`W = ${fmt(W)} J`;
+      $('#workDOut').textContent=`${fmt(D)} N/cm`;$('#workSOut').textContent=`${fmt(s)} cm`;
+      $('#workReadout').textContent=`Spannarbeit: W = ½ · F · s = ${fmt(W)} J`;
+    }
+    $('#workD').addEventListener('input',updateWorkGraph);$('#workS').addEventListener('input',updateWorkGraph);updateWorkGraph();
+  }
+
+})();
+</script>
+<script>(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches,NS='http://www.w3.org/2000/svg';
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),el=id=>document.getElementById(id);
+const val=id=>+el(id).value,at=(id,a)=>+el(id).getAttribute(a);
+// finer steps so dragging feels continuous
+Object.entries({forceF1:.1,forceF2:.1,forceAngle:1,hookeD:.1,hookeS:.1,leverF1Input:1,leverL1Input:.05,leverL2Input:.05,planeMass:.5,workD:.1,workS:.1,pulleyPull:.5,pulleyLoad:10}).forEach(([i,s])=>{const e=el(i);if(e)e.step=s});
+function put(id,v){const e=el(id);if(!e||!isFinite(v))return;e.value=clamp(v,+e.min,+e.max);e.dispatchEvent(new Event('input',{bubbles:true}))}
+
+// ---- drag handles ----
+const hs=[];
+function handle(svgId,pos,drag,label){
+  const svg=el(svgId);if(!svg)return;
+  const g=document.createElementNS(NS,'g');g.setAttribute('class','hd');g.setAttribute('tabindex','0');g.setAttribute('role','slider');g.setAttribute('aria-label',label);
+  g.innerHTML='<circle class="hit" r="30"/><circle class="ring" r="15"/><circle class="dot" r="7"/>';
+  svg.appendChild(g);
+  const pt=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())};
+  g.addEventListener('pointerdown',e=>{g.setPointerCapture(e.pointerId);g.classList.add('on');svg.classList.add('dragging');$$('.hint',svg.closest('figure')).forEach(h=>h.style.animation='none');e.preventDefault()});
+  g.addEventListener('pointermove',e=>{if(g.hasPointerCapture(e.pointerId)){const p=pt(e);drag(p.x,p.y)}});
+  const end=()=>{g.classList.remove('on');svg.classList.remove('dragging')};
+  g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+  g.addEventListener('keydown',e=>{const d={ArrowRight:[1,0],ArrowLeft:[-1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(!d)return;e.preventDefault();const p=pos();drag(p[0]+d[0]*5,p[1]+d[1]*5)});
+  hs.push(()=>{const p=pos();g.setAttribute('transform',`translate(${p[0]} ${p[1]})`)});
+  const fig=svg.closest('figure');
+  if(fig&&!$('.hint',fig)){const h=document.createElement('span');h.className='hint';h.textContent='✥ Punkte im Diagramm ziehen';($('figcaption',fig)||fig).prepend(h)}
+}
+// Kräfteparallelogramm
+handle('forceDiagram',()=>[at('forceVector1','x2'),at('forceVector1','y2')],x=>put('forceF1',(x-270)/17),'Kraft F1 ziehen');
+handle('forceDiagram',()=>[at('forceVector2','x2'),at('forceVector2','y2')],(x,y)=>{const dx=x-270,dy=290-y;put('forceF2',Math.hypot(dx,dy)/17);put('forceAngle',dy<0?(dx<0?180:0):Math.atan2(dy,dx)*180/Math.PI)},'Kraft F2 und Winkel ziehen');
+// Hooke
+handle('hookeGraph',()=>[at('hookePoint','cx'),at('hookePoint','cy')],(x,y)=>{const s=clamp((x-72)/34,.3,10);put('hookeS',s);put('hookeD',(245-y)/3.2/s)},'Punkt auf der Federgeraden ziehen');
+// Flaschenzug
+handle('pulleyDiagram',()=>[544,330+1.24*val('pulleyPull')],(x,y)=>put('pulleyPull',(y-330)/1.24),'Seilende nach unten ziehen');
+handle('pulleyDiagram',()=>[462+(val('pulleyLoad')-100)/900*190,at('pulleyLoadBlock','y')+24],x=>put('pulleyLoad',100+(x-462)/190*900),'Lastkraft einstellen');
+// Hebel
+handle('leverDiagram',()=>[at('leverForce1','x1'),at('leverForce1','y1')],(x,y)=>put('leverF1Input',(125-y)/.65),'Kraft F1 ziehen');
+handle('leverDiagram',()=>[at('leverTick1','x1'),222],x=>put('leverL1Input',(360-x)/142),'Hebelarm l1 ziehen');
+handle('leverDiagram',()=>[at('leverTick2','x1'),222],x=>put('leverL2Input',(x-360)/142),'Hebelarm l2 ziehen');
+// Schiefe Ebene
+handle('planeDiagram',()=>[at('planeSlope','x1')+(at('planeSlope','x2')-at('planeSlope','x1'))*.8,at('planeSlope','y1')+(at('planeSlope','y2')-at('planeSlope','y1'))*.8],(x,y)=>put('planeAlpha',Math.atan2(345-y,304)*180/Math.PI),'Neigungswinkel ziehen');
+handle('planeDiagram',()=>[at('planeFG','x2'),at('planeFG','y2')],(x,y)=>put('planeMass',(y-at('planeOrigin','cy')-70)/3),'Masse ziehen');
+// Spannarbeit
+handle('workDiagram',()=>[at('workPoint','cx'),at('workPoint','cy')],(x,y)=>{const s=clamp((x-100)/35,.3,10);put('workS',s);put('workD',(235-y)/3/s)},'Punkt ziehen');
+(function tick(){hs.forEach(f=>f());requestAnimationFrame(tick)})();
+
+// ---- readout flash ----
+$$('.viz-readout').forEach(r=>new MutationObserver(()=>{r.classList.remove('flash');void r.offsetWidth;r.classList.add('flash')}).observe(r,{childList:true,characterData:true,subtree:true}));
+
+// ---- hero: letters + pointer parallax ----
+const h1=$('h1'),hero=$('header.hero');
+if(h1&&!RM){h1.innerHTML=[...'MECHANIK'].map((c,i)=>`<span class="ch" style="--i:${i}">${c}</span>`).join('')+'<span class="ch dot" style="--i:8">.</span>'}
+$$('.hero .tag').forEach((t,i)=>t.style.setProperty('--t',i));
+hero&&hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();hero.style.setProperty('--px',((e.clientX-r.left)/r.width*2-1).toFixed(2));hero.style.setProperty('--py',((e.clientY-r.top)/r.height*2-1).toFixed(2))},{passive:true});
+
+// ---- cursor spotlight on cards ----
+document.addEventListener('pointermove',e=>{const t=e.target.closest&&e.target.closest('.panel,.formula-item,.example,.calc-card,.quiz-wrap,details');if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty('--mx',e.clientX-r.left+'px');t.style.setProperty('--my',e.clientY-r.top+'px')},{passive:true});
+
+// ---- scroll reveal + svg draw-in ----
+$$('svg .line,svg .force,svg .force2').forEach(l=>l.setAttribute('pathLength','1'));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;io.unobserve(t);t.classList.add('in');
+  const d=parseInt(t.style.getPropertyValue('--d'))||0;setTimeout(()=>{t.classList.remove('rv','in');t.style.removeProperty('--d')},1500+d);
+  const s=$('svg',t);if(s&&!RM){s.classList.add('drawing');setTimeout(()=>s.classList.remove('drawing'),1500)}}),{threshold:.12});
+if(!RM)$$('.section-head,.panel,.formula-item,.example,.warning,.note,.diagram,.calc-card,.quiz-wrap,details,.viz-controls,main table').forEach(t=>{
+  t.classList.add('rv');t.style.setProperty('--d',Math.min([...t.parentNode.children].indexOf(t),6)*70+'ms');io.observe(t)});
+
+// ---- scroll spy in nav ----
+const links=$$('.toplinks a'),nav=$('.toplinks');
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;links.forEach(a=>{const on=a.hash==='#'+e.target.id;a.classList.toggle('on',on);if(on&&nav.scrollWidth>nav.clientWidth)nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.offsetWidth/2,behavior:'smooth'})})}),{rootMargin:'-45% 0px -50% 0px'});
+$$('main > section').forEach(s=>spy.observe(s));
+})();
+</script>
+</body>
+</html>
