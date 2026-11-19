@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamepad Cursor</title>
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(45deg, #111, #222);
+  overflow: hidden;
+  cursor: none;
+  font-family: Arial, sans-serif;
+}
+
+.cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, #0ff, #00aaaa);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 15px #0ff, 
+    0 0 30px rgba(0,255,255,0.5),
+    inset 0 0 10px rgba(255,255,255,0.3);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  transition: all 0.1s ease;
+}
+
+.cursor.clicking {
+  background: radial-gradient(circle, #f0f, #aa00aa);
+  box-shadow: 
+    0 0 15px #f0f, 
+    0 0 30px rgba(255,0,255,0.5),
+    inset 0 0 10px rgba(255,255,255,0.3);
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.trail {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: rgba(0,255,255,0.6);
+  box-shadow: 0 0 8px rgba(0,255,255,0.4);
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  animation: fade 0.8s forwards;
+}
+
+@keyframes fade {
+  0% { 
+    opacity: 0.8; 
+    transform: translate(-50%, -50%) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.2); 
+  }
+}
+
+.debug-info {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: #0ff;
+  font-size: 14px;
+  background: rgba(0,0,0,0.7);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1001;
+  min-width: 200px;
+}
+
+.test-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid #0ff;
+  background: rgba(0,0,0,0.8);
+  color: #0ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+button:hover {
+  background: rgba(0,255,255,0.1);
+  box-shadow: 0 0 10px rgba(0,255,255,0.3);
+}
+
+button:active, button.clicked {
+  background: #0ff;
+  color: #000;
+  transform: scale(0.95);
+}
+
+.slider {
+  width: 200px;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  outline: none;
+  margin: 10px;
+}
+
+.instruction {
+  color: #aaa;
+  font-size: 16px;
+  text-align: center;
+  max-width: 400px;
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<div class="debug-info" id="debugInfo">
+  <div>Status: <span id="status">No gamepad detected</span></div>
+  <div>Active Device: <span id="activeDevice">None</span></div>
+  <div>Position: <span id="position">0, 0</span></div>
+  <div>Left Stick: <span id="leftStick">0, 0</span></div>
+  <div>Button A: <span id="buttonA">Released</span></div>
+  <div id="gamepadList"></div>
+  <button id="refreshGamepads" style="margin-top: 10px; padding: 5px; font-size: 12px;">Refresh Devices</button>
+</div>
+
+<div class="test-area">
+  <div class="instruction">
+    Connect a gamepad and use the left stick to move the cursor.<br>
+    Press the A button (bottom face button) to click.
+  </div>
+  
+  <button id="testButton1" onclick="handleClick(this, 'Button 1')">Test Button 1</button>
+  <button id="testButton2" onclick="handleClick(this, 'Button 2')">Test Button 2</button>
+  <button id="testButton3" onclick="handleClick(this, 'Button 3')">Test Button 3</button>
+  
+  <input type="range" class="slider" min="0" max="100" value="50" id="testSlider">
+  <div style="color: #0ff;">Slider Value: <span id="sliderValue">50</span></div>
+</div>
+
+<script>
+const cursor = document.getElementById('cursor');
+const debugInfo = {
+  status: document.getElementById('status'),
+  activeDevice: document.getElementById('activeDevice'),
+  position: document.getElementById('position'),
+  leftStick: document.getElementById('leftStick'),
+  buttonA: document.getElementById('buttonA'),
+  gamepadList: document.getElementById('gamepadList')
+};
+
+let cursorX = window.innerWidth / 2;
+let cursorY = window.innerHeight / 2;
+let gamepadIndex = -1;
+let isRunning = false;
+
+const settings = {
+  speed: 8,
+  deadZone: 0.15,
+  sensitivity: 1.2,
+  trailFrequency: 3 // Create trail every N frames
+};
+
+let frameCounter = 0;
+let lastButtonStates = {};
+
+// Initialize cursor position
+cursor.style.left = `${cursorX}px`;
+cursor.style.top = `${cursorY}px`;
+
+function updateDebugInfo(gamepad) {
+  if (gamepad) {
+    debugInfo.status.textContent = `Connected`;
+    debugInfo.activeDevice.textContent = gamepad.id;
+    debugInfo.position.textContent = `${Math.round(cursorX)}, ${Math.round(cursorY)}`;
+    debugInfo.leftStick.textContent = `${gamepad.axes[0].toFixed(2)}, ${gamepad.axes[1].toFixed(2)}`;
+    debugInfo.buttonA.textContent = gamepad.buttons[0] && gamepad.buttons[0].pressed ? 'Pressed' : 'Released';
+  } else {
+    debugInfo.status.textContent = 'No active gamepad';
+    debugInfo.activeDevice.textContent = 'None';
+  }
+}
+
+function isLikelyRealGamepad(gamepad) {
+  const id = gamepad.id.toLowerCase();
+  
+  // Filter out audio devices
+  const audioKeywords = ['headset', 'headphones', 'audio', 'speaker', 'microphone', 'corsair void', 'steelseries arctis'];
+  if (audioKeywords.some(keyword => id.includes(keyword))) {
+    return false;
+  }
+  
+  // Look for actual gamepad indicators
+  const gamepadKeywords = ['xbox', 'playstation', 'dualshock', 'controller', 'gamepad', 'joystick'];
+  if (gamepadKeywords.some(keyword => id.includes(keyword))) {
+    return true;
+  }
+  
+  // Check if it has the expected number of axes (most gamepads have at least 2 for left stick)
+  if (gamepad.axes.length >= 2 && gamepad.buttons.length >= 4) {
+    return true;
+  }
+  
+  return false;
+}
+
+function safeGetGamepads() {
+  try {
+    return navigator.getGamepads();
+  } catch (error) {
+    console.error('Gamepad access blocked:', error.message);
+    return null;
+  }
+}
+
+function updateGamepadList() {
+  const gamepads = safeGetGamepads();
+  
+  if (gamepads === null) {
+    debugInfo.gamepadList.innerHTML = `
+      <div style="margin-top: 10px; color: #f80; font-size: 12px;">
+        <strong>⚠️ Gamepad Access Blocked</strong><br>
+        <div style="margin: 5px 0; font-size: 11px; color: #ccc;">
+          The browser is blocking gamepad access due to permissions policy.
+        </div>
+        <div style="margin: 5px 0; font-size: 11px;">
+          Try these solutions:
+        </div>
+        <ul style="margin: 5px 0; padding-left: 15px; font-size: 10px; color: #aaa;">
+          <li>Open this page directly in a new tab (not in an iframe)</li>
+          <li>Use Chrome/Edge and enable gamepad permissions</li>
+          <li>Try a different browser</li>
+          <li>Check if your browser supports the Gamepad API</li>
+        </ul>
+        <div style="margin: 5px 0; font-size: 10px; color: #666;">
+          Current URL: ${window.location.href}
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  let listHTML = '<div style="margin-top: 10px; font-size: 12px;"><strong>Detected Devices:</strong></div>';
+  
+  let realGamepads = [];
+  
+  for (let i = 0; i < gamepads.length; i++) {
+    if (gamepads[i] && gamepads[i].connected) {
+      const gp = gamepads[i];
+      const isReal = isLikelyRealGamepad(gp);
+      const isActive = i === gamepadIndex;
+      
+      if (isReal) {
+        realGamepads.push(i);
+      }
+      
+      listHTML += `<div style="margin: 5px 0; padding: 5px; background: ${isActive ? 'rgba(0,255,255,0.2)' : 'rgba(255,255,255,0.1)'}; border-radius: 3px;">
+        <div style="font-weight: bold; color: ${isReal ? '#0f0' : '#f80'};">
+          ${isReal ? '🎮' : '🎧'} Device ${i}: ${isActive ? '(ACTIVE)' : ''}
+        </div>
+        <div style="font-size: 11px; color: #ccc;">
+          ${gp.id}
+        </div>
+        <div style="font-size: 11px;">
+          Axes: ${gp.axes.length}, Buttons: ${gp.buttons.length}
+        </div>
+        <button onclick="selectGamepad(${i})" style="font-size: 10px; padding: 2px 8px; margin-top: 3px;">
+          ${isActive ? 'Active' : 'Use This'}
+        </button>
+      </div>`;
+    }
+  }
+  
+  debugInfo.gamepadList.innerHTML = listHTML;
+  
+  // Auto-select the first real gamepad if none is selected
+  if (gamepadIndex === -1 && realGamepads.length > 0) {
+    selectGamepad(realGamepads[0]);
+  }
+}
+
+function selectGamepad(index) {
+  const gamepads = safeGetGamepads();
+  if (gamepads && gamepads[index] && gamepads[index].connected) {
+    gamepadIndex = index;
+    console.log('Selected gamepad:', gamepads[index].id);
+    updateGamepadList();
+    
+    if (!isRunning) {
+      startGamepadPolling();
+    }
+  }
+}
+
+function createTrail(x, y) {
+  const trail = document.createElement('div');
+  trail.className = 'trail';
+  trail.style.left = `${x}px`;
+  trail.style.top = `${y}px`;
+  document.body.appendChild(trail);
+  
+  // Remove trail element after animation
+  setTimeout(() => {
+    if (trail.parentNode) {
+      trail.remove();
+    }
+  }, 800);
+}
+
+function simulateClick(x, y) {
+  // Get the element at the cursor position
+  const elementAtPoint = document.elementFromPoint(x, y);
+  
+  if (elementAtPoint && elementAtPoint !== cursor) {
+    // Create and dispatch click events
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: x,
+      clientY: y
+    });
+    
+    elementAtPoint.dispatchEvent(clickEvent);
+    
+    // Visual feedback for cursor
+    cursor.classList.add('clicking');
+    setTimeout(() => cursor.classList.remove('clicking'), 150);
+    
+    console.log('Clicked element:', elementAtPoint.tagName, elementAtPoint.id || elementAtPoint.className);
+  }
+}
+
+function applyDeadZone(value, deadZone) {
+  if (Math.abs(value) < deadZone) {
+    return 0;
+  }
+  // Scale the remaining range to 0-1
+  const sign = Math.sign(value);
+  const scaledValue = (Math.abs(value) - deadZone) / (1 - deadZone);
+  return sign * scaledValue;
+}
+
+function gamepadLoop() {
+  const gamepads = safeGetGamepads();
+  
+  if (gamepads === null) {
+    // Gamepad access blocked, stop polling and update UI
+    stopGamepadPolling();
+    updateGamepadList();
+    return;
+  }
+  
+  const gamepad = gamepadIndex >= 0 ? gamepads[gamepadIndex] : null;
+  
+  if (gamepad && gamepad.connected) {
+    // Get left stick input
+    let axisX = applyDeadZone(gamepad.axes[0], settings.deadZone);
+    let axisY = applyDeadZone(gamepad.axes[1], settings.deadZone);
+    
+    // Apply sensitivity and speed
+    axisX *= settings.sensitivity;
+    axisY *= settings.sensitivity;
+    
+    // Move cursor
+    if (axisX !== 0 || axisY !== 0) {
+      cursorX += axisX * settings.speed;
+      cursorY += axisY * settings.speed;
+      
+      // Keep cursor within bounds
+      cursorX = Math.max(10, Math.min(window.innerWidth - 10, cursorX));
+      cursorY = Math.max(10, Math.min(window.innerHeight - 10, cursorY));
+      
+      // Update cursor position
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+      
+      // Create trail occasionally to avoid too many elements
+      if (frameCounter % settings.trailFrequency === 0) {
+        createTrail(cursorX, cursorY);
+      }
+    }
+    
+    // Handle button presses (A button = index 0)
+    const aButton = gamepad.buttons[0];
+    const wasPressed = lastButtonStates[0] || false;
+    const isPressed = aButton.pressed;
+    
+    if (isPressed && !wasPressed) {
+      // Button just pressed
+      simulateClick(cursorX, cursorY);
+    }
+    
+    lastButtonStates[0] = isPressed;
+    
+    // Update debug info
+    updateDebugInfo(gamepad);
+  } else {
+    // No gamepad connected or selected
+    updateDebugInfo(null);
+  }
+  
+  frameCounter++;
+  
+  if (isRunning) {
+    requestAnimationFrame(gamepadLoop);
+  }
+}
+
+function startGamepadPolling() {
+  if (!isRunning) {
+    isRunning = true;
+    gamepadLoop();
+    console.log('Started gamepad polling');
+  }
+}
+
+function stopGamepadPolling() {
+  isRunning = false;
+  console.log('Stopped gamepad polling');
+}
+
+// Event listeners for gamepad connection
+window.addEventListener("gamepadconnected", (e) => {
+  console.log("Device connected:", e.gamepad.id);
+  updateGamepadList();
+});
+
+window.addEventListener("gamepaddisconnected", (e) => {
+  console.log("Device disconnected:", e.gamepad.id);
+  if (e.gamepad.index === gamepadIndex) {
+    gamepadIndex = -1;
+  }
+  updateGamepadList();
+});
+
+// Test functions
+function handleClick(button, name) {
+  button.classList.add('clicked');
+  setTimeout(() => button.classList.remove('clicked'), 200);
+  console.log(`${name} clicked!`);
+}
+
+// Slider handling
+document.getElementById('testSlider').addEventListener('input', (e) => {
+  document.getElementById('sliderValue').textContent = e.target.value;
+});
+
+// Refresh button
+document.getElementById('refreshGamepads').addEventListener('click', updateGamepadList);
+
+// Check if Gamepad API is supported and accessible
+function checkGamepadSupport() {
+  if (!navigator.getGamepads) {
+    console.error('Gamepad API not supported');
+    debugInfo.status.textContent = 'Gamepad API not supported';
+    return false;
+  }
+  
+  try {
+    navigator.getGamepads();
+    return true;
+  } catch (error) {
+    console.error('Gamepad API blocked:', error);
+    debugInfo.status.textContent = 'Gamepad access blocked by browser';
+    return false;
+  }
+}
+
+// Initialize
+if (checkGamepadSupport()) {
+  // Start polling immediately (some browsers don't fire connection events for already connected gamepads)
+  setTimeout(() => {
+    updateGamepadList();
+  }, 100);
+} else {
+  updateGamepadList();
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  cursorX = Math.max(10, Math.min(window.innerWidth - 10, cursorX));
+  cursorY = Math.max(10, Math.min(window.innerHeight - 10, cursorY));
+  cursor.style.left = `${cursorX}px`;
+  cursor.style.top = `${cursorY}px`;
+});
+
+console.log('Gamepad cursor initialized. Connect a gamepad and use the left stick to control the cursor.');
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+/* Entferne Standard-Listensymbole und Abstände */
+ul { 
+	list-style: none; 
+	margin: 0; 
+	padding: 0; 
+}
+
+/* Navbar horizontal */
+.navbar { 
+	display: flex; 
+	background-color: #333; 
+}
+
+/* Navbar-Items relative position für Dropdown */
+.navbar li { 
+	position: relative; 
+}
+
+/* Links */
+.navbar a {
+	display: block; 
+	padding: 14px 20px; 
+	color: white; 
+	text-decoration: none; 
+}
+
+/* Hover-Farbe */
+.navbar a:hover { 
+	background-color: #bdbdbd; 
+}
+
+/* Dropdown-Menü */
+.dropdown { 
+	display: none; 
+	position: absolute; 
+	top: 100%; 
+	left: 0; 
+	background-color: #f9f9f9; 
+}
+
+/* Dropdown-Links schwarz */
+.dropdown a { 
+	color: rgb(0, 0, 0); 
+}
+
+/* Dropdown anzeigen bei Hover */
+.navbar li:hover .dropdown { 
+	display: block; 
+}

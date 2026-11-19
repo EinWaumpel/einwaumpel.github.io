@@ -1,0 +1,74 @@
+<!DOCTYPE>
+<html>
+  <head>
+   <title>Von-Neumann-Architektur</title>
+   <link rel="stylesheet" href="navbar-gruen.css">
+  </head>
+  <body>
+    <div>
+        <ul class="navbar">
+            <li><a href="index-links.html">Home</a>
+            <li><a>Erfinder</a>
+                <ul class="dropdown">
+                    <li><a>Die Sumeren</a></li>
+                    <li><a href="SakalKaanYusuffliesstext-alchwarizmi.html">Al-Chwarizmi</a></li>
+                    <li><a href="AlomerovicEnsarWillhelmLeibniz.html">Gottfried Willhelm Leibzig</a></li>
+                    <li><a>Konrad Zuse</a></li>
+                    <li><a href="WiedenhoferTobiasJakobAlanTuringvonTobi.html">Alan Turing</a></li>
+                    <li><a>Presper Eckert & John William Mauchley</a></li>
+                    <li><a>John von Neumann</a></li>
+                    <li><a href="WissingSimontim-berners-leefliesstext.html">Tim Berners Lee</a></li>
+                </ul>
+            </li>
+            <li><a>Erfindungen</a>
+                <ul class="dropdown">
+                    <li><a href="abakus_abgabe.html">Sumerische Rechenscheibe (Abakus)</a></li>
+                    <li><a href="algorithmen.html">Algorithmen</a></li>
+                    <li><a href="MureitaMohammadMeschanischeRechenmaschine.html">Staffelwalzen Rechenmaschine</a></li>
+                    <li><a href="RönnebergLiamZ1.html">Erster Programmierbarer Rechner (Z1)</a></li>
+                    <li><a href="RoserMikaZ3.html">Erster Frei Programmierbarer Rechner (Z3)</a></li>
+                    <li><a>Turing Bombe</a></li>
+                    <li><a href="Eniac.html">Erster voll elektronischer Rechner (ENIAC)</a></li>
+                    <li><a href="SpielmannNeleVon-Neumann-Architektur.html">Von-Neumann-Architektur</a></li>
+                    <li><a href="BenilovNikolaiworldwibeweb-fliesstext.html">WorldWideWeb</a></li>
+                    <li><a>HTML</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+  <h1>Von-Neumann-Architektur</h1>
+  </br>
+  <p>Die Idee der Von-Neumann-Architektur ist, dass der Speicher eines Computer sowohl Programmbefehle des Gerätes als auch Daten enthält. Die heutigen Computer arbeiten nach diesem Modell</p>
+  <h2>Geschichte und Entstehung</h2>
+  <p>Die Idee dieser <i>Architektur</i> wurde von Von-Neumann zunächst in seinem Dokument <b>„First Draft of a Report on the EDVAC“</b> dargestellt. Dieses Papier, welches allerdings nie veröffentlicht wurde, erstellte er im Rahmen der <b>EDVCA Rechenmaschine</b>, die in den 40ern von John Presper Eckert und John Maulchy konstruiert wurde.</p>
+  <p>Durch die Von-Neumann-Architektur war es im Gegensatz zu vorherigeren Rechnern möglich Programme schneller zu ändern, ohne die Hardware wandeln zu müssen, und diese in enger Abfolge abzurufen.</p>
+  <p>Die Von-Neumann-Architektur weist Parallelen zu der Arbeit von <b>Konrad Zuse</b> auf, die er Ende der 30er Jahre patenteierte und zum Teil auch beim Bau der <b>Z1</b> anwendete. Allerdings kannte Von Neumann diese Arbeit aber vermutlich nicht.</p>
+  <h2><i>Wie funktioniert die Von-Neumann-Architektur?</i></h2> 
+  <h3>Vergleich zur Turingmaschine</h3>
+  <p>Im Allgemeinen sollte die Von-Neumann-Architektur dazu dienen <i>Universalrechner</i>, also Computer, die komplexere Probleme mittels mathematischer oder algorithmischer Berechnungen lösen zu können, realisieren.<br> Dadurch liefert sie auch die für eine <b>Turingmaschine</b> nötigen <i>Komponenten</i>, bis auf einen unendlichen Speicher. Daher gilt aber auch, dass alles, was mit dieser Maschine kalkulierbar <i>wäre</i> auch mit dem Prinzip von von Neumann kalkulierbar <i>ist</i>.</p>
+  <h3>Komponenten</h3>
+  <p><i>Heutige Computer bestehen aus den gleichen Komponenten, die von der Von-Neumann-Architektur vorgesehen werden:</i></p>
+  <p>Einem <b>Rechenwerk</b> (Prozessor), welcher Rechenoperationen und <i>boolesche Verknüpfungen</i> ausführt,</p>
+  <p>Einem <b>Steuerwerk</b>, das Anweisungen eines Programms verschaltet,</p>
+  <p>Einem <b>Bus System</b>, welches zur Kommunikation zwischen den Komponenten dient,</p>
+  <p>Einem <b>Speicherwerk</b>, das Programme und Daten zugänglich für das Rechenwerk speichert</p>
+  <p>Und einem <b>Eingabe-/Ausgabewerk</b>, welches die Ein- und Ausgabe von Daten zur Tastatur, dem Bildschirm oder anderen Systemen steuert</p>
+  <h3>Prinzip</h3>
+  <p><b>1. Des gespeicherten Programms:</b></p>
+  <p>-das <i>Leiten</i> an andere Funktionsstellen</p>
+  <p>-die <i>Ablage</i> von Befehlen in einem <b>RAM-Speicher</b> (Speicher mit direktem Zugriff gespeichert)</p>
+  <p>-<b>Befehlszähler</b> oder <i>Programmzähler</i> zeigen nächsten Befehlen</p>
+  <p>-<b>Änderung</b> von Befehlen datengleich</p>
+  <p><b>2. Der Programm-Ausführung:</b></p>
+  <p>-Lesen und Ausführen der Befehle aus Zellen <i>(im Speicher)</i></p>
+  <p>-Erhöhung des Inhalts des <b>Befehlszählers</b> um +1</p>
+  <p>-<b>Sprung-Befehle</b> erlauben die Änderung des Inhalts um andere Werte als <i>+1</i></p>
+  <p>-Veränderung des Wertes im <b>Befehlszähler</b> durch <b>Verzweigungsbefehle</b></p>
+  <p>-Änderung in Abhängigkeit vom Wert des <b>Entscheidungs-Bit</b></p>
+  <h2>Vergleich zur Harvard-Architektur</h2>
+  <p>Die <b>Von-Neumann-Architektur</b> ist durch das gemeinsame Speichern von Daten und Programmen in den selben Speicherbereichen und Datenpfaden gekennzeichnet.<br>Daher teilen sich Befehle und Daten den gleichen Datenpfad zwischen Prozessor und Speicher, weshalb der Speicher flexibel genutzt werden kann.<br> Allerdings ist dadurch nur eine sequenzielle Ausführung der Befehle möglich.</p>
+  <p>Die <b>Harvard-Architektur</b> hingegen nutzt getrennte Datenpfade und und Seicherbereiche, in denen Daten und Programme übertragen beziehungsweise gespeichert werden.<br>Deshalb kann auf Daten und Programminstruktionen seperat zugegriffen werden, wass zu einer potenzellen Steigerung der Leistung führt, da Instruktionen und Datenzugriffe gleichzeitig erfolgen können.</p>
+  
+  </body>
+</html>
+ 

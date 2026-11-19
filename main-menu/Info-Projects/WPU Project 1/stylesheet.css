@@ -1,0 +1,115 @@
+table,
+th,
+td {
+  border: 2px solid #000;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 2px 4px 1px 4px;
+  text-align: center;
+}
+
+h1 {
+  text-decoration: underline;
+  text-decoration-style: solid;
+}
+
+h2 {
+  text-decoration: underline;
+  text-decoration-style: double;
+}
+
+.navbar {
+  display: flex;
+  align-items: stretch;
+  background-color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+}
+
+.navbar a,
+.dropdown .dropbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 0 16px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  background: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+  background-color: #acacac;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  width: auto;
+  min-width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 8px 12px;
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1.2;
+  height: auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.dropdown-content a:hover {
+  background-color: #999999;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.intro-section,
+.history-section,
+.function-section,
+.application-section,
+.advantages-section,
+.modern-education-section,
+.tldr-section,
+.images-section {
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 22px;
+  width: fit-content;
+  box-sizing: border-box;
+}
+
+.intro-section { background-color: #FFE4E6; }
+.history-section { background-color: #E6F3FF; }
+.function-section { background-color: #E6FFE6; }
+.application-section { background-color: #FFF0E6; }
+.advantages-section { background-color: #F0E6FF; }
+.modern-education-section { background-color: #FFFFE6; }
+.tldr-section { background-color: #E6FFFF; }
+.images-section { background-color: #F5F5DC; }

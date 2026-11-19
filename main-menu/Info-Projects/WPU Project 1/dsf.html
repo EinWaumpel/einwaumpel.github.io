@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="algorithmus.png">
+    <title>Der Algorithmus</title>
+    <style>
+        /* basic reset for the nav */
+        .topnav {
+            background: #222;
+            font-family: Georgia, "Segoe UI", Tahoma, sans-serif;
+            color: #fff;
+        }
+
+        .topnav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 0;
+        }
+
+        .topnav > ul {
+            align-items: center;
+        }
+
+        .topnav li {
+            position: relative; /* needed for absolute-positioned dropdown */
+        }
+
+        .topnav a {
+            display: block;
+            padding: 12px 18px;
+            color: #fff;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .topnav a:hover,
+        .topnav a:focus {
+            background: #333;
+        }
+
+        /* dropdown menu */
+        .topnav .dropdown {
+            display: none; /* hidden until hover/focus */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            color: #000;
+            min-width: 220px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            padding: 6px 0;
+            z-index: 1000;
+        }
+
+        .topnav .dropdown li {
+            display: block;
+        }
+
+        .topnav .dropdown a {
+            color: #111;
+            padding: 8px 14px;
+        }
+
+        .topnav .dropdown a:hover,
+        .topnav .dropdown a:focus {
+            background: #f2f2f2;
+        }
+
+        /* show dropdown on hover/focus-within (no JS) */
+        .topnav li:hover > .dropdown,
+        .topnav li:focus-within > .dropdown {
+            display: block;
+        }
+
+        /* small responsive tweak */
+        @media (max-width: 640px) {
+            .topnav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .topnav .dropdown {
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+            }
+        }
+
+        /* page body spacing so nav doesn't overlap content */
+        body {
+            margin: 0;
+            font-family: Georgia, sans-serif;
+        }
+
+        main {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top navigation (replace your original list with this) -->
+    <nav class="topnav" aria-label="Hauptnavigation">
+        <ul>
+            <li>
+                <a href="#" aria-haspopup="true" aria-expanded="false">Erfinder ▾</a>
+                <ul class="dropdown" role="menu" aria-label="Erfinder">
+                    <li><a href="#" role="menuitem">Die Sumeren</a></li>
+                    <li><a href="#" role="menuitem">Al-Chwarizmi</a></li>
+                    <li><a href="#" role="menuitem">Gottfried Willhelm Leibzig</a></li>
+                    <li><a href="#" role="menuitem">Konrad Zuse</a></li>
+                    <li><a href="#" role="menuitem">Alan Turing</a></li>
+                    <li><a href="#" role="menuitem">John Presper Eckert &amp; John William Mauchley</a></li>
+                    <li><a href="#" role="menuitem">John von Neumann</a></li>
+                    <li><a href="#" role="menuitem">Tim Berners Lee</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" aria-haspopup="true" aria-expanded="false">Erfindungen ▾</a>
+                <ul class="dropdown" role="menu" aria-label="Erfindungen">
+                    <li><a href="#" role="menuitem">Sumerische Rechenscheibe (Abakus)</a></li>
+                    <li><a href="#" role="menuitem">Algorithmus</a></li>
+                    <li><a href="#" role="menuitem">Staffelwalzen Rechenmaschine</a></li>
+                    <li><a href="#" role="menuitem">Erster Programmierbarer Rechner (Z1); Z3</a></li>
+                    <li><a href="#" role="menuitem">Turing Bombe</a></li>
+                    <li><a href="#" role="menuitem">Erster Frei Programmierbarer Rechner (ENIAC)</a></li>
+                    <li><a href="#" role="menuitem">Von-Neumann-Architektur</a></li>
+                    <li><a href="#" role="menuitem">WorldWideWeb; HTML</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- wrap your original content in main so spacing and layout are preserved -->
+    <main>
+        <h1>Der Algorithmus</h1>
+
+        <p>Der <b>Algorithmus</b> ist eine der grundlegendsten Konzepte der <b>Informatik</b> und <b>Mathematik</b>
+            und hat eine Geschichte, die weit über die moderne Computertechnik hinausreicht. Ursprünglich aus der
+            antiken <b>Mathematik</b> hervorgegangen, wurde der Begriff im Mittelalter durch den persischen Gelehrten
+            <b>al-Chwarizmi</b> geprägt, dessen Name die Grundlage für das Wort „<b>Algorithmus</b>“ bildet. Heute findet
+            man <b>Algorithmen</b> in nahezu allen Bereichen des täglichen Lebens – von <b>Suchmaschinen</b> bis hin zu
+            <b>medizinischer Diagnostik</b>.
+        </p>
+
+        <!-- rest of your original content continues unchanged -->
+        <h2>Geschichte und Entwicklung</h2>
+        <p>Die Wurzeln des <b>Algorithmus</b> reichen bis in die <b>Antike</b> zurück, etwa zu den Verfahren des
+            <b>Euklid</b> zur Berechnung des größten gemeinsamen Teilers. Im 9. Jahrhundert beschrieb
+            <b>al-Chwarizmi</b> systematische Methoden zur Berechnung, die später in Europa Verbreitung fanden. Mit
+            der Entwicklung der <b>Informatik</b> im 20. Jahrhundert wurden <b>Algorithmen</b> formalisiert und durch
+            Persönlichkeiten wie <b>Alan Turing</b> oder <b>John von Neumann</b> in der modernen Computerwissenschaft
+            verankert.
+        </p>
+
+        <h2>Funktionsweise</h2>
+        <p>Ein <b>Algorithmus</b> ist eine endliche Folge von klar definierten <b>Schritten</b>, die zur Lösung eines
+            <b>Problems</b> oder zur Durchführung einer <b>Aufgabe</b> führen. Er kann als <b>Rezept</b> verstanden
+            werden, das <b>Eingaben</b> in <b>Ausgaben</b> überführt. <b>Algorithmen</b> können in natürlicher
+            Sprache, in <b>mathematischer Notation</b> oder in <b>Programmiersprachen</b> formuliert sein. Sie bilden
+            die Grundlage für <b>Software</b>, <b>Datenverarbeitung</b> und <b>künstliche Intelligenz</b>.
+        </p>
+
+        <h2>Anwendung und Bedeutung</h2>
+        <p><b>Algorithmen</b> sind allgegenwärtig: Sie <b>sortieren Daten</b>, <b>steuern Maschinen</b>, analysieren
+            <b>medizinische Bilder</b> und berechnen <b>Routen</b> in <b>Navigationssystemen</b>. Besonders in der
+            digitalen Welt sind sie unverzichtbar, da sie <b>Effizienz</b>, <b>Automatisierung</b> und
+            <b>Präzision</b> ermöglichen. Ohne <b>Algorithmen</b> wären moderne <b>Computer</b>, das
+            <b>Internet</b> oder selbst einfache <b>Apps</b> undenkbar.
+        </p>
+
+        <h2>Vorteile von Algorithmen</h2>
+        <p>Algorithmen bieten zahlreiche Vorteile:</p>
+        <p style="padding-left: 20px;">1. <b>Effizienz</b>: Sie ermöglichen die schnelle Verarbeitung großer
+            Datenmengen.<br>
+            2. <b>Automatisierung</b>: Wiederkehrende Aufgaben können zuverlässig ohne menschliches Eingreifen
+            ausgeführt werden.<br>3. <b>Skalierbarkeit</b>: Sie lassen sich auf unterschiedlich große Probleme anwenden, vom
+            Taschenrechner bis zu <b>Supercomputern</b>.
+        </p>
+
+        <h2>Algorithmen in der modernen Bildung</h2>
+        <p>In der heutigen Bildung werden <b>Algorithmen</b> nicht nur in der <b>Informatik</b> gelehrt, sondern auch in
+            <b>Mathematik</b>, <b>Naturwissenschaften</b> und sogar im Alltagstraining für <b>logisches Denken</b>.
+            Konzepte wie „<b>algorithmisches Denken</b>“ helfen Schülerinnen und Schülern, komplexe Probleme
+            strukturiert zu lösen und kreative Ansätze in einer zunehmend digitalen Welt zu entwickeln.
+        </p>
+
+        <h2>Fazit</h2>
+        <p>Der <b>Algorithmus</b> ist ein universelles Werkzeug, das seit Jahrtausenden zur Lösung von Problemen genutzt
+            wird. Seine formale <b>Klarheit</b> und Vielseitigkeit machen ihn zu einem unverzichtbaren Bestandteil
+            moderner <b>Technik</b> und <b>Gesellschaft</b>. Trotz seiner oft unsichtbaren Präsenz prägt der
+            <b>Algorithmus</b> maßgeblich, wie Menschen <b>arbeiten</b>, <b>kommunizieren</b> und <b>Entscheidungen</b>
+            treffen.
+        </p>
+    </main>
+</body>
+
+</html>
